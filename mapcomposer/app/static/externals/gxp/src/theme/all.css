@@ -518,3 +518,8 @@ div.olMap div.gx-overlay-playback {
 	width:16px;
 	height:16px;
 }
+.x-action-col-cell  .getinfo{
+	background-image: url(img/silk/information.png) !important;
+	width:16px;
+	height:16px;
+}

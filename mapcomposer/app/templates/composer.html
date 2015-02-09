@@ -276,7 +276,7 @@
                     }
                 }
             }            
-            
+            console.log(serverConfig);
             if(!serverConfig.tab && toolsME.length == 0 && customToolsME.length == 0){
                 appTabsOpts.layout = 'fit';
                 appTabs = new Ext.Panel(appTabsOpts); 
@@ -306,7 +306,7 @@
 					}	
 				}
 				return section;
-			}
+			};
 			
 			if(header || footer){
 				var north = {
@@ -349,8 +349,8 @@
 					border: false,
 					header: false,                    
 					items: [appTabs]
-				}]
-			}			
+				}];
+			};			
 			
 			var appViewport = new Ext.Viewport(viewport);
             
@@ -418,7 +418,8 @@
 				scaleOverlayUnits: serverConfig.scaleOverlayUnits,
                 georeferences: georeferences_data,
                 map: serverConfig.map,
-				customTools: serverConfig.customTools
+				customTools: serverConfig.customTools,
+				customComposerWest:serverConfig.customComposerWest
             }, mapIdentifier, authorization && authorization == "false" ? null: authorization, fullScreen, templateId);   
             
             app.on({
