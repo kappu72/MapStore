@@ -102,6 +102,8 @@ gxp.grid.GcFeatureGrid = Ext.extend(Ext.grid.GridPanel, {
 
         gxp.grid.GcFeatureGrid.superclass.initComponent.call(this);       
     
+       
+
     },
     
     /** private: method[onDestroy]
@@ -166,7 +168,7 @@ gxp.grid.GcFeatureGrid = Ext.extend(Ext.grid.GridPanel, {
         }
 		
        
-		  var columns = [{
+		  var columns = [/*{
             xtype: 'actioncolumn',
             header: "", 
             width: 30,
@@ -200,7 +202,7 @@ gxp.grid.GcFeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                     }
                 }
             }]
-        }];		
+        }*/];		
 		var name, type, xtype, format, renderer;
         (this.schema || store.fields).each(function(f) {
             if (this.schema) {

@@ -31,6 +31,11 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     saveButtonTooltip:'Salva modifiche riga  selezionata',
     cancelButtonText:'Annulla',
     cancelButtonTooltip:'Anulla modifiche',
+    saveOrCancelEdit:'Salva od annula modifiche',
+    commitErrorTitle:'Errore Aggiornamenti',
+    commitErrorMsg:'Impossibile aggiornare soprallugoihi',
+   
+   allowDelete:true,
    
     autoScroll: true,
     title: "Sopralluoghi",
@@ -40,6 +45,14 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      */
     ignoreFields: null,
     
+    /** api: config[colConfig]
+     *  ``Object``
+     *  An object with as keys the field names, which will provide the ability
+     *  to override the col configuration for that fileds
+     */
+    colConfig:null,
+    
+    edit:true,
     format:'JSON',
     filter:null,
      queriableAttribute : null ,
@@ -71,6 +84,11 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
      *  Initializes the FeatureGrid.
      */
     initComponent: function(){
+        
+        
+      
+        
+        
       
          this.ignoreFields = ["feature", "state", "fid"].concat(this.ignoreFields);
         if (!this.dateFormat) {
@@ -79,33 +97,45 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         if (!this.timeFormat) {
             this.timeFormat = Ext.form.TimeField.prototype.format;
         }
-      
+      console.log(this.target);
             this.sm= new Ext.grid.RowSelectionModel({
                 
            singleSelect:true,
            listeners:{ 
                'beforerowselect':function( sm, rowIndex, keepExisting, record ){
                             if(this.colModel.editing){//Devi controllare che la feature non sia stata modificata e poi puoi permettere il cambio
-                                
-                                
-                            }else if(this.editButton.disabled){//Abiliti i bottoni se non sono stati abilitati
-                                this.editButton.enable();
-                                this.deleteButton.enable();
+                                   if(sm.getSelected().dirty) {
+                                        Ext.MessageBox.show({
+                                        msg: this.saveOrCancelEdit,
+                                         buttons: Ext.Msg.OK,
+                                         animEl: 'elId',
+                                        icon: Ext.MessageBox.INFO
+                                     });
+                                       
+                                       return false;                                                                     
+                                }
                             }
                    
                    
                },
                 'rowselect' : function(sm, rowIndex, r ){ //Attiva i tasti per editing
-                                console.log('selected');
-                                this.feature=r.data.feature;
-                                this.attributes = Ext.apply({}, this.feature.attributes);
-                               
+                            if(this.deleteButton.disabled){//Abiliti i bottoni se non sono stati abilitati
+                             
+                                this.deleteButton.enable();
+                            } 
+                            
+                                this.feature=r.data.feature;//Questa è la feature su cui lavirianmo
+                                this.selectedRecord=r;
+                             
+
 
                                 
                 },
-                'selectionchange': function(sm ){
-                    console.log('selcange');
-                },
+                'rowdeselect': function(sm ){
+                    if(!this.deleteButton.disabled){//Abiliti i bottoni se non sono stati abilitati
+                             
+                                this.deleteButton.disable();
+                            }                },
                 scope:this
             }
                 });    
@@ -116,7 +146,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             text: this.editButtonText,
             tooltip: this.editButtonTooltip,
             iconCls: "edit",
-            disabled:true,
+            disabled:false,
             handler: this.enableEditing,
             scope: this,
             ref:'/editButton'}
@@ -125,11 +155,11 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             text: this.deleteButtonText,
             tooltip: this.deleteButtonTooltip,
             iconCls: "delete",
-            hidden: false,
+            hidden: !this.allowDelete,
             disabled:true,
             handler: this.deleteFeature,
             scope: this,
-            ref:'./deleteButton'
+            ref:'/deleteButton'
             },
         
             {
@@ -138,10 +168,10 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             iconCls: "cancel",
             hidden: true,
             handler: function() {
-                this.stopEditing(false);
+                this.finishEditing(false);
             },
             scope: this,
-            ref:'../cancelButton'
+            ref:'/cancelButton'
         },
         
          {
@@ -150,10 +180,10 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             iconCls: "save",
             hidden: true,
             handler: function() {
-                this.stopEditing(true);
+                this.finishEditing(true);
             },
             scope: this,
-            ref:'../saveButton'
+            ref:'/saveButton'
         }
       
             
@@ -167,19 +197,51 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
       
       var me=this;
       //Lo ritardo perchè altrimenti mi elimina il layer del feature manager ma va fixato!!
-      window.setTimeout(function(){
+     /* window.setTimeout(function(){
            me.target.createLayerRecord({"source":me.source,
          "name":me.typeName},me.setSopLayer,me);   
         
-      },3000);
+      },3000);*/
+     this.getSchema(this.createStore,this);
       
     },
- 
+    getSchema: function(callback,scope){
+        var schema = new GeoExt.data.AttributeStore({
+            url: this.wfsURL, 
+            baseParams: {
+                SERVICE: "WFS",
+                VERSION: "1.1.0",
+                REQUEST: "DescribeFeatureType",
+                TYPENAME: this.typeName,
+            },
+            autoLoad: true,
+            listeners: {
+                "load": function() {
+                    callback.call(scope, schema);
+                },
+                scope: this
+            }
+        });
+    },
      loadSop: function(param){
+         
+
+                    if(this.getSelectionModel().getSelected() && this.getSelectionModel().getSelected().dirty) {
+                                        Ext.MessageBox.show({
+                                        msg: this.saveOrCancelEdit,
+                                         buttons: Ext.Msg.OK,
+                                         animEl: 'elId',
+                                        icon: Ext.MessageBox.INFO
+                                     });
+                                       
+                                       return false;   
+                                       }                                                                  
+
+        this.disableEditing();
+        this.deleteButton.disable();
+          
         var params={};
         if(this.oldParam===param)return;//If oalready loaded skip!
-         
-        console.log(param);
         this.filter=new OpenLayers.Filter.Comparison({
             type:OpenLayers.Filter.Comparison.EQUAL_TO,
             property: this.queriableAttribute,
@@ -192,8 +254,6 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
    },
     
      setSopLayer:function(layerRecord){
-         console.log("SOP Layer Arrivato!");
-       
         this.layerRecord=layerRecord;           
         this.createStore();
     },
@@ -206,28 +266,9 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     },
   
 
-createStore: function() {
-        var record = this.layerRecord;
-        var source = this.target.getSource(record);
-        if (source && source instanceof gxp.plugins.WMSSource) {
-            source.getSchema(record, function(schema) {
-                if (schema === false) {
-                
-                    //information about why selected layers are not queriable.                
-                    var layer = record.get("layer");
-                    var wmsVersion = layer.params.VERSION;
-                    Ext.MessageBox.show({
-                        title: this.noValidWmsVersionMsgTitle,
-                        msg: this.noValidWmsVersionMsgText + wmsVersion,
-                        buttons: Ext.Msg.OK,
-                        animEl: 'elId',
-                        icon: Ext.MessageBox.INFO
-                    });
-                    
-                    this.clearFeatureStore();
-                } else
-                               
-                 {
+createStore: function(schema) {
+        
+                    this.schema = schema;
                     var fields = [], geometryName;
                     var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
                     var types = {
@@ -300,13 +341,10 @@ createStore: function() {
                             scope: this
                         }
                     }, protocolOptions));
-                }
-                  this.schema = schema;
-                   
-           
-            this.reconfigure(featureStore, this.createColumnModel(featureStore));
+          
+                this.reconfigure(featureStore, this.createColumnModel(featureStore));
 
-            }, this);
+           
             
                    
         
@@ -314,7 +352,7 @@ createStore: function() {
             
             
             
-        }      
+            
     },
 
     /** api: method[getColumns]
@@ -372,18 +410,22 @@ createStore: function() {
             }
              var fieldCfg = GeoExt.form.recordToField(f);
             if (this.ignoreFields.indexOf(name) === -1) {
-               
-                columns.push({
+               var col={
                     dataIndex: name,
                     header: fieldCfg.fieldLabel,
                     sortable: true,
                     xtype: xtype,
                     format: format,
                     renderer: xtype ? undefined : renderer,
-                    editor: fieldCfg
-               
+                    editor: fieldCfg,
+                    editable:this.edit 
                     
-                });
+                };
+                 if (this.colConfig && this.colConfig[name]) {
+                     
+                    Ext.apply(col, this.colConfig[name]);
+                }
+                columns.push(col);
             }
         }, this);
         return columns;
@@ -408,38 +450,47 @@ createStore: function() {
      /** private: method[startEditing]
      */
     enableEditing: function() {
-        console.log(this);
-        if(!this.colModel.editing) {
-            this.colModel.editing = true;
-            
+       
+            this.colModel.editing = true;     
             this.editButton.hide();
-            //this.deleteButton.hide();
+            this.deleteButton.hide();
             this.saveButton.show();
-            this.cancelButton.show();
+            this.cancelButton.show();     
+       
+    },
+     disableEditing: function() {
             
-            
-            
-        }
+                  
+            this.colModel.editing = false; 
+            this.editButton.show();
+            this.deleteButton.show();
+            this.saveButton.hide();
+            this.cancelButton.hide();
+                                  
+       
     },
      /** private: method[stopEditing]
      *  :arg save: ``Boolean`` If set to true, changes will be saved and the
      *      ``featuremodified`` event will be fired.
      */
-    stopEditing: function(save) {
-        if(this.editing) {
-            //TODO remove the line below when
-            // http://trac.openlayers.org/ticket/2210 is fixed.
-            this.modifyControl.deactivate();
-            this.modifyControl.destroy();
-            
+    finishEditing: function(save) {
+      
+            console.log(this.selectedRecord);
             var feature = this.feature;
-            if (feature.state === this.getDirtyState()) {
+            
+            if ( this.selectedRecord.dirty) {
+                
                 if (save === true) {
-                    //TODO When http://trac.osgeo.org/openlayers/ticket/3131
-                    // is resolved, remove the if clause below
-                    if (this.schema) {
+                     if (this.schema) {
                         var attribute, rec;
+                       // Ext.apply(feature.attributes,this.selectedRecord.data);
+                        for (var i in this.selectedRecord.modified) {
+                            feature.attributes[i]=this.selectedRecord.data[i];
+                        }
+                       
                         for (var i in feature.attributes) {
+                           
+                                                      
                             rec = this.schema.getAt(this.schema.findExact("name", i));
                             attribute = feature.attributes[i];
                             if (attribute instanceof Date) {
@@ -450,33 +501,15 @@ createStore: function() {
                             }
                         }
                     }
-                    this.fireEvent("featuremodified", this, feature);
-                } else if(feature.state === OpenLayers.State.INSERT) {
-                    this.editing = false;
-                    feature.layer.destroyFeatures([feature]);
-                    this.fireEvent("canceledit", this, null);
-                    this.close();
-                } else {
-                    var layer = feature.layer;
-                    layer.drawFeature(feature, {display: "none"});
-                    feature.geometry = this.geometry;
-                    feature.attributes = this.attributes;
-                    this.setFeatureState(null);
-                    this.grid.setSource(feature.attributes);
-                    layer.drawFeature(feature);
-                    this.fireEvent("canceledit", this, feature);
-                }
-            }
-
-            if (!this.isDestroyed) {
-                this.cancelButton.hide();
-                this.saveButton.hide();
-                this.editButton.show();
-                this.allowDelete && this.deleteButton.show();
-            }
+                    this.setFeatureState(OpenLayers.State.UPDATE);
+                    this.commit();                 
+                 
+                }else this.selectedRecord.reject();
+           }
+ 
+             this.disableEditing();
             
-            this.editing = false;
-        }
+        
     },
     
     deleteFeature: function() {
@@ -502,12 +535,18 @@ createStore: function() {
      */
     setFeatureState: function(state) {
         this.feature.state = state;
-        var layer = this.feature.layer;
+       
         /*layer && layer.events.triggerEvent("featuremodified", {
             feature: this.feature
         });*/
     },
-    
+    getFeatureState: function(state) {
+        return this.feature.state;
+       
+        /*layer && layer.events.triggerEvent("featuremodified", {
+            feature: this.feature
+        });*/
+    },
      /** private: method[getDirtyState]
      *  Get the appropriate OpenLayers.State value to indicate a dirty feature.
      *  We don't cache this value because the popup may remain open through
@@ -521,12 +560,30 @@ createStore: function() {
 
   //Committa i cambiamenti  
     commit: function(){
-        console.log(this.feature);
         this.store.proxy.protocol.commit(
             [this.feature], {
                 callback: function(res) {
+                   if(res.code==1){
+                   
+                  if(this.getFeatureState()===OpenLayers.State.UPDATE)
+                    this.selectedRecord.commit();
+                   else  if(this.getFeatureState()===OpenLayers.State.DELETE)
+                   this.getStore().remove(this.selectedRecord);
+                    this.getSelectionModel().clearSelections();                 
+                    this.deleteButton.disable();  
+                                    
+                   }else if (res.code==0){
+                     Ext.MessageBox.show({
+                        title: this.commitErrorTitle,
+                        msg: this.commitErrorMsg,
+                        buttons: Ext.Msg.OK,
+                        animEl: 'elId',
+                        icon: Ext.MessageBox.INFO
+                    });
+                       
+                   }
                     console.log(res);                    
-                }
+                },scope:this
         });
 
         

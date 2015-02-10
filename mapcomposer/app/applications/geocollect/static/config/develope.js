@@ -158,6 +158,7 @@
         "topOutUnits":"km"
     },
     "customTools":[
+  
         {
             "ptype": "gxp_embedmapdialog",
             "actionTarget": {"target": "paneltbar", "index": 2},

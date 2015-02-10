@@ -314,7 +314,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         var mapPanelContainer= this.target.mapPanelContainer;
         var target=this.target;
         
-        
+        console.log(featureManager);
        
         
         //Creo il pannello che carica i dettagli segnalazione!!
@@ -323,18 +323,24 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             title:"Dettagli segnalazione",
             target: this.target,
             westVisible:false,
-            layout:'vBox', 
-              autoScroll: true,
-            align : "stretch",
-             pack  : 'start',
+            layout:'border', 
+           //   autoScroll: true,
+            //align : "stretch",
+            // pack  : 'start',
             items:[{
-                xtype:"panel",
-                
-                
+                xtype:"gxp_segform",
+                region:'west',
+                ref:'seg',
+                width:280,
+                border:'true',
+                featureManager:featureManager,
+                 autoScroll: true,
             },{
                 xtype:"tabpanel",
+                region:'center',
                 activeItem:0  ,
                 flex:1,
+                height:500,
                 items:[{
                     xtype:"gxp_gchistroygrid",
                     title:"Storico",
@@ -387,31 +393,34 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     xtype:"gxp_gcsopgrid",
                     title:"Sopralluoghi",
                     target:this.target,
+                    wfsURL: "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
+
                     source: "geosolutions",
-                    typeName: "punti_abbandono_sop",
+                    typeName: "rilevamenti_effettuati",
                     ref:"../sop",
-                      queriableAttribute : 'MY_ORIG_ID',
+                    queriableAttribute : 'MY_ORIG_ID',
                      //queriableAttribute : 'GCID',
-                     autoScroll: true
-                    
+                    autoScroll: true,
+                   
+                    colConfig:{
+                        'RIMOZIONE':{
+                        header: 'RIMOZIONE',
+                        editor: { 
+                            xtype: 'combo',
+                            store: ['Si','No','Forse'],
+                            queryMode: 'local',
+                            typeAhead: true,
+                            triggerAction: 'all',
+                            }
+                        
+                            }
+                    }
                 }]
                 
             }
             
             ],
             
-            
-            tbar:[{
-                iconCls: "gxp-icon-geolocationmenu",
-                text:"Map",
-                tooltip: "Go to Map",
-                
-                handler: function() {
-                 
-                   this.segdet.hideMe();
-                },
-                scope:this
-            }],
             
             listeners: {
                 beforeadd: function(record) {                   
@@ -420,7 +429,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 pluginready: function(istance) {
                 }
             },
-            showMe:function(grid, rowIndex, colIndex){
+            showMe:function(record){
                 
                  
 
@@ -436,22 +445,18 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     this.westVisible=true;
                     }else this.westVisible=false;
                 //Attivo il pannello
-               this.target.mapPanelContainer.layout.setActiveItem(2);
+              this.target.mapPanelContainer.layout.setActiveItem(2);
                }
                
-               if(grid){
+               if(record){
                    
-                   var store = grid.getStore();
-                    var row = store.getAt(rowIndex);
-                    var feature = row.data.feature;
                     
-                   
+                 console.log(record);
          
-            this.seg_history.loadHistory(row.data.GCID);
+            this.seg_history.loadHistory(record.data.GCID);
+             this.seg.setFeature(record.data.feature);
              //this.sop.loadSop(row.data.GCID);
-
-           this.sop.loadSop(row.data.fid.split('.')[1]);
-        
+           this.sop.loadSop(record.data.fid.split('.')[1]);
                 }
                
             },
@@ -507,10 +512,20 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 autoActivateControl: false,
                 listeners: {
                     "beforerowselect": function() {
+                        
                         if(this.selectControl.active || featureManager.featureStore.getModifiedRecords().length) {
                             return false;
                         }
                     },
+                      "select" : function(sm, rowIndex, r ){
+                    
+                       
+                    if(this.showInfo==true)this.segdet.showMe(r);
+                    
+                    
+                    }
+                    
+                    ,
                     scope: this
                 }
             };
@@ -698,17 +713,23 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             segDetPanel:this.segdet,
             bbar: bbar,
             tbar:[{
-                iconCls: "gxp-icon-geolocationmenu",
-                text:"Map/Info",
-                tooltip: "Toggle Map/Info",
+                iconCls: "gxp-icon-getfeatureinfo",
+                text:"Dettagli",
+                tooltip: "Apri pannello dettaglio segnalazione!",
                 
                 handler: function() {
-                 
-                  this.segdet.isVisible()? this.segdet.hideMe():this.segdet.showMe(null,null,null);
+                  this.showInfo=(this.showInfo===true)? false:true;
+                  this.segdet.isVisible()? this.segdet.hideMe():this.segdet.showMe(null);
                 },
                 scope:this
+              
+                
+                
             }],
             listeners: {
+               
+                
+                
                 "added": function(cmp, ownerCt) {
                     var onClear = OpenLayers.Function.bind(function() {
                         if(this.exportFormats){
@@ -790,7 +811,18 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 }               
             }]})
         }, config || {});
-        var featureGrid = gxp.plugins.FeatureGrid.superclass.addOutput.call(this, config);
+        var featureGrid = gxp.plugins.GcSegGrid.superclass.addOutput.call(this, config);
+        
+        console.log(featureGrid);
+       
+        featureGrid.selModel.on('rowselect',function(sm, rowIndex, r ){
+                    
+                    console.log("  sddggds");
+                    if(this.showInfo==true)this.segdet.showMe(r);
+                    
+                    
+            },this);
+        
         
         if (this.alwaysDisplayOnMap || this.selectOnMap) {
             featureManager.showLayer(this.id, this.displayMode);
@@ -852,6 +884,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
 				}
 			}
         }, this);
+        
         
         return featureGrid;
     },
