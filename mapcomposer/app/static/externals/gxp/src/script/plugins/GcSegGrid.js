@@ -299,7 +299,19 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         
     },
     
-   
+   /*
+    {
+                xtype:"gxp_segform",
+                region:'west',
+                ref:'seg',
+                width:280,
+                border:'true',
+                featureManager:featureManager,
+                 autoScroll: true,
+            }
+    * 
+    * 
+    * */
          
 
     
@@ -310,7 +322,6 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     addOutput: function(config) {
         var featureManager = this.target.tools[this.featureManager];
         var map = this.target.mapPanel.map, smCfg;
-          var featureEditor =this.target.tools[this.featureEditor];
         var mapPanelContainer= this.target.mapPanelContainer;
         var target=this.target;
         
@@ -328,18 +339,18 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             //align : "stretch",
             // pack  : 'start',
             items:[{
-                xtype:"gxp_segform",
+                xtype:"panel",
                 region:'west',
                 ref:'seg',
-                width:280,
+                width:300,
+                items:[],
                 border:'true',
-                featureManager:featureManager,
-                 autoScroll: true,
+                layout:'fit'
             },{
                 xtype:"tabpanel",
                 region:'center',
                 activeItem:0  ,
-                flex:1,
+            
                 height:500,
                 items:[{
                     xtype:"gxp_gchistroygrid",
@@ -454,9 +465,10 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                  console.log(record);
          
             this.seg_history.loadHistory(record.data.GCID);
-             this.seg.setFeature(record.data.feature);
+            // this.seg.setFeature(record.data.feature);
              //this.sop.loadSop(row.data.GCID);
-           this.sop.loadSop(record.data.fid.split('.')[1]);
+           this.sop.loadSop(record.data.feature.fid.split('.')[1]);
+            this.doLayout();
                 }
                
             },
@@ -512,20 +524,16 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 autoActivateControl: false,
                 listeners: {
                     "beforerowselect": function() {
-                        
+                         console.log("pippo");
                         if(this.selectControl.active || featureManager.featureStore.getModifiedRecords().length) {
                             return false;
                         }
                     },
-                      "select" : function(sm, rowIndex, r ){
-                    
+                    "rowselect": function() {
                        
-                    if(this.showInfo==true)this.segdet.showMe(r);
-                    
-                    
-                    }
-                    
-                    ,
+                        
+                    },
+                 
                     scope: this
                 }
             };
@@ -666,8 +674,9 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
 		);
 		
         var bbar = (featureManager.paging ? [toolbarElements] : []).concat(["->"].concat(!this.alwaysDisplayOnMap ? [{
-                text: this.displayFeatureText,
+               /*text: this.displayFeatureText,
                 id: "showButton",
+                hidden:true,
                 iconCls: "gxp-icon-addtomap",
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) {
@@ -675,7 +684,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     featureManager[pressed ? "showLayer" : "hideLayer"](this.id, this.displayMode);
                 },
                 scope: this
-            }] : [])).concat(["->"]);
+            */}] : [])).concat(["->"]);
 
         // Export formats 
         if(this.exportFormats){
@@ -713,13 +722,15 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             segDetPanel:this.segdet,
             bbar: bbar,
             tbar:[{
+                ref:'./toggleInfo',
                 iconCls: "gxp-icon-getfeatureinfo",
                 text:"Dettagli",
                 tooltip: "Apri pannello dettaglio segnalazione!",
-                
-                handler: function() {
-                  this.showInfo=(this.showInfo===true)? false:true;
-                  this.segdet.isVisible()? this.segdet.hideMe():this.segdet.showMe(null);
+                 enableToggle: true,
+                toggleHandler: function(btn, pressed) {
+                 
+                  this.showInfo=(pressed)? true:false;
+                  (!pressed)? this.segdet.hideMe():this.segdet.showMe(this.output[0].selModel.getSelected());
                 },
                 scope:this
               
@@ -813,14 +824,11 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         }, config || {});
         var featureGrid = gxp.plugins.GcSegGrid.superclass.addOutput.call(this, config);
         
-        console.log(featureGrid);
        
         featureGrid.selModel.on('rowselect',function(sm, rowIndex, r ){
-                    
-                    console.log("  sddggds");
-                    if(this.showInfo==true)this.segdet.showMe(r);
-                    
-                    
+                                    
+                     if(this.showInfo==true)this.segdet.showMe(r);
+                     
             },this);
         
         

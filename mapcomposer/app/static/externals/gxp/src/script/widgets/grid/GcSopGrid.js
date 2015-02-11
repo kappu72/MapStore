@@ -106,7 +106,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                             if(this.colModel.editing){//Devi controllare che la feature non sia stata modificata e poi puoi permettere il cambio
                                    if(sm.getSelected().dirty) {
                                         Ext.MessageBox.show({
-                                        msg: this.saveOrCancelEdit,
+                                         msg: this.saveOrCancelEdit,
                                          buttons: Ext.Msg.OK,
                                          animEl: 'elId',
                                         icon: Ext.MessageBox.INFO
@@ -122,6 +122,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                             if(this.deleteButton.disabled){//Abiliti i bottoni se non sono stati abilitati
                              
                                 this.deleteButton.enable();
+                                this.editButton.enable();
                             } 
                             
                                 this.feature=r.data.feature;//Questa è la feature su cui lavirianmo
@@ -133,7 +134,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                 },
                 'rowdeselect': function(sm ){
                     if(!this.deleteButton.disabled){//Abiliti i bottoni se non sono stati abilitati
-                             
+                                 this.editButton.disable();
                                 this.deleteButton.disable();
                             }                },
                 scope:this
@@ -146,7 +147,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             text: this.editButtonText,
             tooltip: this.editButtonTooltip,
             iconCls: "edit",
-            disabled:false,
+            disabled:true,
             handler: this.enableEditing,
             scope: this,
             ref:'/editButton'}
@@ -239,6 +240,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
         this.disableEditing();
         this.deleteButton.disable();
+         this.editButton.disable();
           
         var params={};
         if(this.oldParam===param)return;//If oalready loaded skip!
@@ -571,6 +573,7 @@ createStore: function(schema) {
                    this.getStore().remove(this.selectedRecord);
                     this.getSelectionModel().clearSelections();                 
                     this.deleteButton.disable();  
+                    this.editButton.disable();
                                     
                    }else if (res.code==0){
                      Ext.MessageBox.show({

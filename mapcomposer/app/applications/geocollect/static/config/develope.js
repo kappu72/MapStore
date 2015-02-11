@@ -120,7 +120,7 @@
                {
                  "title": "Segnalazioni", 
                 "layout" : "vBox",
-                "width": 600,
+                "width": 380,
                  "minSize": 100,
                 "maxSize": 250,
                  "collapsible": true,
@@ -137,13 +137,14 @@
                     "border": false,
                     "id": "seglist",
                     "layout": "fit",
+                    
                     "tbar":[]
                 }, {
                     "xtype": "panel",
                     "title": "Ricerca Segnalazioni",         
                     "border": false,
                     "flex":1,
-                    "width": 600,
+                    "width": 380,
                     "id": "qrypnl",
                     "layout": "fit",
                     "header": true
@@ -187,29 +188,38 @@
          "source":"geosolutions",
          "name":"punti_abbandono"
             }
-        },
+        }
       
-         {  
-            "ptype": "gxp_featureeditor",
-            "featureManager": "featuremanager",
-            "id":"featureEdit", 
-            "toggleGroup": "toolGroup",
-            "showSelectedOnly":false,
-            "actionTarget": {"target": "seglist.tbar", "index": 0}
-        },{
+       ,{
           "ptype": "gxp_gcseggrid",
+         "id":"gcseggrid",
           "featureManager": "featuremanager",
-           "featureEditor": "featureEdit",
-           "selectOnMap": true,
-          "ignoreFields":["DATA_RILEV"],
+          
+           "selectOnMap": false,
+           "alwaysDisplayOnMap":false,
+           
+          "ignoreFields":["DATA_RILEV","MACROAREA","MICROAREA","CIRCOSCRIZ","MORFOLOGIA","INCLINAZIO","MORFOLOGI1","COPERTURA_","COPERTURA1","USO_PARCHE","USO_COMMER","USO_STRADA","USO_ABBAND","PRESUNZION",
+                            "AREA_PRIVA","AREA_PUBBL","ALTRE_CARA","DISTANZA_U","DIMENSIONI","RIFIUTI_NO","RIFIUTI_PE","QUANTITA_R","STATO_FISI","ODORE","MODALITA_S","PERCOLATO","VEGETAZION","STABILITA",
+                            "INSEDIAMEN","INSEDIAME1","INSEDIAME2","DISTANZA_C","DISTANZA_P","INSEDIAME3","BOSCATE","BOSCATE_AB","AGRICOLO","AGRICOLO_A","TORRENTI_R","NOME_TORRE","RISCHIO_ES","RIFIUTI_IN",
+                            "PROBABILE","IMPATTO_ES","POZZI_FALD","CRITICITA","IMPATTO_CO","NOTE","PULIZIA","DISSUASION","VALORE_GRA","PROBABILE_","FATTIBILE_","VALORE_FAT","LATITUDINE","LONGITUDIN",
+                            "GCID","ID1","VALORE_RIS","SOCIO_PAES","VALORE_SOC","FATTIBILIT","GMROTATION","MY_ORIG_ID","USO_AGRICO"],
           "outputConfig": {
               "id": "featuregrid",
-               "ignoreFields":["DATA_RILEV"],
+              
               "header":false
           },
          "outputTarget": "seglist",
           "exportFormats": ["CSV","shape-zip"]
         }, 
+          {  
+            "ptype": "gxp_gcfeatureeditor",
+            "featureManager": "featuremanager",
+            "id":"featureEdit",
+            "gcseg":"gcseggrid", 
+            "toggleGroup": "toolGroup",
+            "showSelectedOnly":false,
+            "actionTarget": {"target": "featuregrid.tbar", "index": 0}
+        },
         {
           "ptype": "gxp_spatialqueryform",
           "featureManager": "featuremanager",
