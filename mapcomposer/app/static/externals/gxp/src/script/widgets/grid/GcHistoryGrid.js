@@ -264,8 +264,13 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
    loadHistory: function(param){
         var params={};
         if(this.oldParam===param)return;//If oalready loaded skip!
-        
-       //Preparo il filtro con il valore passato ed eseguo la query
+        //pulisco lo store :-S
+       console.log("pulisco grid");
+       this.store.removeAll();
+       //this.doLayout();
+       if(!param)return;
+      
+              //Preparo il filtro con il valore passato ed eseguo la query
        this.vendorParams={cql_filter:this.queriableAttribute+this.predicate+""+param+""};
        this.store.setBaseParam(this.queryParam,this.queriableAttribute+this.predicate+param);
        if(this.pageSize){

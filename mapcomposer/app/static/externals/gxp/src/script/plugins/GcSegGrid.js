@@ -120,6 +120,11 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     comboFormatTpl: "<tpl for=\".\"><div class=\"x-combo-list-item gxp-icon-featuregrid-export {iconCls}\">{name}</div></tpl>",
     
+    editButtonText: 'Edit',
+    
+    deleteButtonText: 'Delete',
+    
+    
     /** api: config[displayFeatureText]
      * ``String``
      * Text for feature display button (i18n).
@@ -460,14 +465,13 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                }
                
                if(record){
-                   
-                    
-                 console.log(record);
          
             this.seg_history.loadHistory(record.data.GCID);
             // this.seg.setFeature(record.data.feature);
              //this.sop.loadSop(row.data.GCID);
-           this.sop.loadSop(record.data.feature.fid.split('.')[1]);
+            if(record.data.feature.fid) 
+            this.sop.loadSop(record.data.feature.fid.split('.')[1]);
+            else this.sop.loadSop('');
             this.doLayout();
                 }
                
@@ -493,6 +497,9 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         });
        
             mapPanelContainer.add(this.segdet);
+        
+        
+
         
         // a minimal SelectFeature control - used just to provide select and
         // unselect, won't be added to the map unless selectOnMap is true
@@ -520,20 +527,25 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         } else {
             smCfg = {
                 selectControl: this.selectControl,
-                singleSelect: false,
+                singleSelect: true,
                 autoActivateControl: false,
                 listeners: {
-                    "beforerowselect": function() {
-                         console.log("pippo");
-                        if(this.selectControl.active || featureManager.featureStore.getModifiedRecords().length) {
-                            return false;
-                        }
+                    "beforerowselect": function(sm, rowIndex, keepExisting, record ) {
+                    //Se sono in editing il sel model è bloccato :-S    
+                 
                     },
                     "rowselect": function() {
-                       
-                        
+                       //Abilito i bottoni!
+                       this.enableTools();
+ 
                     },
-                 
+                    "rowdeselect": function() {
+                       //Abilito i bottoni!
+                      this.disableTools();
+                    
+ 
+                    },
+                    
                     scope: this
                 }
             };
@@ -714,6 +726,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
 
         config = Ext.apply({
             xtype: "gxp_gcfeaturegrid",
+            viewConfig: {forceFit: true},
             actionTooltip: null,
             map: this.target.mapPanel.map,
             sm: new GeoExt.grid.FeatureSelectionModel(smCfg),
@@ -722,25 +735,62 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             segDetPanel:this.segdet,
             bbar: bbar,
             tbar:[{
-                ref:'./toggleInfo',
+                xtype:'buttongroup',
+                ref:'/zommInfo',
+                disabled:true,
+                items:[{
+                ref:'/../toggleInfo',
+                disabled:false,
                 iconCls: "gxp-icon-getfeatureinfo",
                 text:"Dettagli",
                 tooltip: "Apri pannello dettaglio segnalazione!",
-                 enableToggle: true,
-                toggleHandler: function(btn, pressed) {
-                 
+                enableToggle: true,
+                toggleHandler: function(btn, pressed) { 
+                    
                   this.showInfo=(pressed)? true:false;
                   (!pressed)? this.segdet.hideMe():this.segdet.showMe(this.output[0].selModel.getSelected());
+                  (pressed)?this.segGrid.getTopToolbar().items.first().disable() : this.segGrid.getTopToolbar().items.first().enable();  
                 },
                 scope:this
-              
+            },{
+                text: this.zoomToFeature,
+                tooltip: this.zoomToFeature,
+                iconCls: 'gxp-icon-zoom-to',
+                scope: this,
+                handler: function(cmp){
+                    
+                    var selection = this.segGrid.getSelectionModel().getSelections()[0];
+                    var feature = selection.data.feature;
+                   
+                    if(feature){
+                        var geom=feature.geometry;
+                        this.target.mapPanel.map.setCenter(new OpenLayers.LonLat(geom.x,geom.y),13);
+                      
+                    }
+                }               
+            }
+        
+            
+            
+            
+            ]},{
+                xtype:'buttongroup',
+                ref:'./fBtGroup',
+                disabled:true,
+                items:[{
+                    text: this.editButtonText,
+                    iconCls: "edit",
+                },{
+                    text: this.deleteButtonText,
+                  
+                    iconCls: "delete",
+                    
+                }]
                 
                 
-            }],
+            }
+            ],
             listeners: {
-               
-                
-                
                 "added": function(cmp, ownerCt) {
                     var onClear = OpenLayers.Function.bind(function() {
                         if(this.exportFormats){
@@ -786,7 +836,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                         "clearfeatures": onClear
                     });
                 },
-                contextmenu: function(event) {
+             /*   contextmenu: function(event) {
                     if (featureGrid.contextMenu.items.getCount() > 0) {
                         var rowIndex = featureGrid.getView().findRowIndex(event.getTarget());
                         if (rowIndex !== false) {
@@ -795,35 +845,15 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                             event.stopEvent();
                         }
                     }
-                },
+                },*/
                 scope: this
             },
-            contextMenu: new Ext.menu.Menu({items: [{
-                text: this.zoomToFeature,
-                tooltip: this.zoomToFeature,
-                iconCls: 'gxp-icon-zoom-to',
-                scope: this,
-                handler: function(cmp){
-                    var grid = this.output[0];
-                    var selection = grid.getSelectionModel().getSelections()[0];
-                    var feature = selection.data.feature;
-                    if(feature){
-                        var bounds = feature.geometry.getBounds();
-                        if(bounds){
-                            this.target.mapPanel.map.zoomToExtent(bounds);
-                            
-                            var showButton = Ext.getCmp("showButton");
-                            if(!showButton.pressed){
-                                showButton.toggle(true);
-                                this.selectControl.select(feature);
-                            }
-                        }
-                    }
-                }               
-            }]})
+          
         }, config || {});
         var featureGrid = gxp.plugins.GcSegGrid.superclass.addOutput.call(this, config);
         
+        this.segGrid=featureGrid;
+        this.segGrid.getSelectionModel().lock(); 
        
         featureGrid.selModel.on('rowselect',function(sm, rowIndex, r ){
                                     
@@ -841,6 +871,8 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
 	   // /////////////////////////////////////
 	    var me = this;
         featureManager.paging && featureManager.on("setpage", function(mgr, condition, callback, scope, pageIndex, numPages) {
+            this.disableTools();
+            this.segGrid.toggleInfo.toggle(false);
             var paging = (mgr.page && (mgr.page.numFeatures > 0)) || numPages > 1;
             featureGrid.zoomToPageButton.setDisabled(!paging);
             var prev = (paging && (pageIndex !== 0));
@@ -897,6 +929,20 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         return featureGrid;
     },
 
+
+    enableTools: function(){
+        this.segGrid.zommInfo.enable();
+                       var btns=this.segGrid.getTopToolbar().items.last();
+                       if (btns!=this.segGrid.fBtnGroup)btns.enable();
+
+    },
+    disableTools: function(){
+        
+         this.segGrid.zommInfo.disable();
+         this.segGrid.getTopToolbar().items.last().disable();
+        
+        
+    },
     /** api: method[getExportWindowButton]
      *  Generate a export button to open a new dialog with the configured formats
      */    

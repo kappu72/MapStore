@@ -149,6 +149,8 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
      */
     deleteButton: null,
     
+    footer:true,
+    
     /** private: method[initComponent]
      */
     initComponent: function() {
@@ -182,7 +184,12 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
              *  Listener arguments:
              *  * panel - :class:`gxp.FeatureEditPopup` This popup.
              */
-            "cancelclose"
+            "cancelclose",
+            
+            "startsegediting",
+            
+            "stopsegediting"
+            
         );
         
         if (!this.dateFormat) {
@@ -376,8 +383,10 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
             this.grid
         ];
 
-        this.bbar = new Ext.Toolbar({
+        this.b = new Ext.ButtonGroup({
             hidden: this.readOnly,
+            
+           // renderTo:'featuresegridbutton',
             items: [
                 this.editButton,
                 this.deleteButton,
@@ -388,7 +397,10 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
         
         gxp.plugins.GcSegForm.superclass.initComponent.call(this);
         
-        this.on({
+       
+        
+        
+     /*   this.on({
             "show": function() {
                 if(this.editing) {
                     this.editing = null;
@@ -422,8 +434,9 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
                 }
             },
             scope: this
-        });
+        });*/
     },
+    
     
     /** private: method[getDirtyState]
      *  Get the appropriate OpenLayers.State value to indicate a dirty feature.
@@ -440,7 +453,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
     startEditing: function() {
         if(!this.editing) {
             this.editing = true;
-            this.anc && this.unanchorPopup();
+         //   this.anc && this.unanchorPopup();
 
             this.editButton.hide();
             this.deleteButton.hide();
@@ -457,6 +470,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
             this.feature.layer.map.addControl(this.modifyControl);
             this.modifyControl.activate();
             this.modifyControl.selectFeature(this.feature);
+            this.fireEvent( "startsegediting",this);
         }
     },
     
@@ -515,6 +529,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
             }
             
             this.editing = false;
+            this.fireEvent( "stopsegediting",this);
         }
     },
     
@@ -546,6 +561,11 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
         layer && layer.events.triggerEvent("featuremodified", {
             feature: this.feature
         });
+    },
+    destroy:function(){
+      console.log("distruggo");  
+        this.b.destroy();
+        
     }
 });
 

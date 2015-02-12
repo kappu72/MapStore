@@ -48,7 +48,7 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  ``String``
      *  Tooltip string for create new feature action (i18n).
      */
-    createFeatureActionTip: "Create a new feature",
+    createFeatureActionTip: "Crea nuova segnalazione",
 
     /** api: config[createFeatureActionText]
      *  ``String``
@@ -59,7 +59,7 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  ``String``
      *  Tooltip string for edit existing feature action (i18n).
      */
-    editFeatureActionTip: "Edit existing feature",
+    editFeatureActionTip: "Seleziona segnalazioni",
 
     /** api: config[editFeatureActionText]
      *  ``String``
@@ -143,7 +143,7 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
     /** api: method[addActions]
      */
     addActions: function() {
-        var popup;
+        var popup,segForm;
         var featureManager = this.target.tools[this.featureManager];
         var featureLayer = featureManager.featureLayer;
         var  gcseg= this.target.tools[this.gcseg];
@@ -246,7 +246,10 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             },
             eventListeners: {
                 "activate": function() {
-                    console.log("attivato");
+                    //Attivo il select della griglia
+                    gcseg.selectControl=this.selectControl;
+                    gcseg.segGrid.getSelectionModel().unlock();
+                    
                     if (this.autoLoadFeatures === true || featureManager.paging) {
                         this.target.mapPanel.map.events.register(
                             "click", this, this.noFeatureClick
@@ -258,13 +261,18 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                    // this.selectControl.unselectAll(
                       //  popup && popup.editing && {except: popup.feature}
                    // );
+                  if(featureLayer.selectedFeatures[0]) this.selectControl.highlight(featureLayer.selectedFeatures[0]);
+
                 },
                 "deactivate": function() {
+                    gcseg.segGrid.toggleInfo.toggle(false);
+                    gcseg.segGrid.getSelectionModel().clearSelections();
+                    gcseg.segGrid.getSelectionModel().lock();
                     if (this.autoLoadFeatures === true || featureManager.paging) {
                         this.target.mapPanel.map.events.unregister(
                             "click", this, this.noFeatureClick
                         );
-                    }
+                    }featureManager.hideLayer(this.id);
                     
                 },
                 scope: this
@@ -276,9 +284,7 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 this.selectControl.unselect(evt.feature);
             },
             "featureunselected": function(evt) {
-                if(popup) {
-                    popup.close();
-                }
+               
             },
             "beforefeatureselected": function(evt) {
                 //TODO decide if we want to allow feature selection while a
@@ -289,9 +295,13 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 // must not configure the ModifyFeature control in standalone
                 // mode, and use the SelectFeature control that comes with the
                 // ModifyFeature control instead.
-                console.log("beforefeatureselected");
-                if( gcseg.segdet.seg.items.get(0)) {
-                    return !gcseg.segdet.seg.items.get(0).editing;
+             
+               
+                if( segForm && segForm.editing) {
+                    console.log("mi pianto");
+                    
+                     //evt.cancelBubble=false;
+                     return false;
                 }
             },
             "featureselected": function(evt) {
@@ -300,29 +310,23 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 if(true) {
                     
                     //Genero sempre la scheda per editing anche se non la uso!!:-D
-                      
-                      gcseg.segdet.seg.insert(0,{
-                        
-                        xtype:'gxp_gcsegform',
+                        segForm= new gxp.plugins.GcSegForm(  {
                         feature:feature,
                         schema:featureManager.schema,
                         allowDelete: true,  
                         listeners: {
-                            "close": function() {
-                                if(feature.layer && feature.layer.selectedFeatures.indexOf(feature) !== -1) {
-                                    this.selectControl.unselect(feature);
-                                }
-                                if (feature === this.autoLoadedFeature) {
-                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
-                                }
+                            "startsegediting": function() {
+                                 gcseg.segGrid.getSelectionModel().lock();
+                            },
+                            "stopsegediting": function() {
+                                 gcseg.segGrid.getSelectionModel().unlock();
                             },
                             "featuremodified": function(popup, feature) {
+                                console.log(feature.state);
                                 featureStore.on({
                                     write: {
                                         fn: function() {
-                                            if (popup && popup.isVisible()) {
-                                                popup.enable();
-                                            }
+                                   
                                         },
                                         single: true
                                     },
@@ -338,90 +342,49 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                      * we need to stop the store from removing the
                                      * feature from the layer.
                                      */
+                                    gcseg.segGrid.toggleInfo.toggle(false);
+                                    gcseg.disableTools();
                                      featureStore._removing = true; // TODO: remove after http://trac.geoext.org/ticket/141
                                     featureStore.remove(featureStore.getRecordFromFeature(feature));
                                     delete featureStore._removing; // TODO: remove after http://trac.geoext.org/ticket/141
+                                   
                                 }
+                                
                                 featureStore.save();
                             },
                             "canceledit": function(popup, feature) {
+                                if(feature===null)  {
+                                    gcseg.segGrid.toggleInfo.toggle(false);
+                                    gcseg.disableTools();}
+
                                 featureStore.commitChanges();
+                                
                             },
                             scope: this
                         }                    
                     });
+                      gcseg.segdet.seg.insert(0,segForm);
+                     
                     if(feature.state === OpenLayers.State.INSERT){
                        //ATTIVO EDITING E APRO IL PANNELLO
-                        gcseg.segdet.seg.items.get(0).startEditing();
-                        gcseg.output[0].toggleInfo.toggle(true);
+                        segForm.startEditing();
+                        gcseg.segGrid.toggleInfo.toggle(true);
+                    
                     }
                     gcseg.segdet.doLayout();
+                    
                     if( ftGri=gcseg.segdet.seg.items.get(1)){
-                        console.log("rimuovo");
+                        
                          gcseg.segdet.seg.remove(ftGri,true);
                          
                     }
-                     
                     
-                    /*popup = this.addOutput({
-                        xtype: "gxp_featureeditpopup",
-                        collapsible: true,
-                        feature: feature,
-                        vertexRenderIntent: "vertex",
-                        readOnly: this.readOnly,
-                        fields: this.fields,
-                        excludeFields: this.excludeFields,
-                        editing: feature.state === OpenLayers.State.INSERT,
-                        schema: this.schema,
-                        allowDelete: true,
-                        width: 200,
-                        height: 250,
-                        listeners: {
-                            "close": function() {
-                                if(feature.layer && feature.layer.selectedFeatures.indexOf(feature) !== -1) {
-                                    this.selectControl.unselect(feature);
-                                }
-                                if (feature === this.autoLoadedFeature) {
-                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
-                                }
-                            },
-                            "featuremodified": function(popup, feature) {
-                                popup.disable();
-                                featureStore.on({
-                                    write: {
-                                        fn: function() {
-                                            if (popup && popup.isVisible()) {
-                                                popup.enable();
-                                            }
-                                        },
-                                        single: true
-                                    },
-                                    scope: this
-                                });                                
-                                if(feature.state === OpenLayers.State.DELETE) {                                    
-                                    /**
-                                     * If the feature state is delete, we need to
-                                     * remove it from the store (so it is collected
-                                     * in the store.removed list.  However, it should
-                                     * not be removed from the layer.  Until
-                                     * http://trac.geoext.org/ticket/141 is addressed
-                                     * we need to stop the store from removing the
-                                     * feature from the layer.
-                                     */
-                      /*              featureStore._removing = true; // TODO: remove after http://trac.geoext.org/ticket/141
-                                    featureStore.remove(featureStore.getRecordFromFeature(feature));
-                                    delete featureStore._removing; // TODO: remove after http://trac.geoext.org/ticket/141
-                                }
-                                featureStore.save();
-                            },
-                            "canceledit": function(popup, feature) {
-                                featureStore.commitChanges();
-                            },
-                            scope: this
-                        }
-                    });
+                     //Elimino i bottoni finti iniziali :-D
+                     gcseg.segGrid.fBtGroup.hide();
+                     gcseg.segGrid.getTopToolbar().add(segForm.b);
+                     gcseg.segGrid.getTopToolbar().doLayout();
                     
-                */}
+                   }
             },
             "sketchcomplete": function(evt) {
                 // Why not register for featuresadded directly? We only want

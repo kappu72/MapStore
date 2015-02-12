@@ -114,7 +114,9 @@
     },
 "customComposerWest" :{
      "region":"east",
-     "collapsed":true
+     "collapsed":true,
+                       "collapseMode": null
+
  }, 
     "customPanels":[ 
                {
@@ -124,7 +126,7 @@
                  "minSize": 100,
                 "maxSize": 250,
                  "collapsible": true,
-                  "collapseMode": "mini",
+                
                 "region": "west",
                 "align" : "stretch",
                   "border": false,
@@ -141,7 +143,8 @@
                     "tbar":[]
                 }, {
                     "xtype": "panel",
-                    "title": "Ricerca Segnalazioni",         
+                    "title": "Ricerca Segnalazioni", 
+                            
                     "border": false,
                     "flex":1,
                     "width": 380,
