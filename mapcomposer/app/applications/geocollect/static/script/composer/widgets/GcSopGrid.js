@@ -25,13 +25,13 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     deleteMsgTitle:'Delete',
     deleteMsg:'Are you sure you want do delete this row',
     deleteButtonText:'Delete',
-    deleteButtonTooltip:'Delete Selected Row',
+    deleteButtonTooltip:'Delete selected row',
     editButtonText:'Edit',
-    editButtonTooltip:'Edit Slected Row',
+    editButtonTooltip:'Edit slected row',
     saveButtonText:'Save',
-    saveButtonTooltip:'Salva Changes',
+    saveButtonTooltip:'Salva changes',
     cancelButtonText:'Cancel',
-    cancelButtonTooltip:'Cancel Changes',
+    cancelButtonTooltip:'Cancel changes',
     saveOrCancelEdit:'Save or cancel changes',
     commitErrorTitle:'Error saving',
     commitErrorMsg:'Changes not saved!',
@@ -40,7 +40,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     allowDelete:true,
    
     autoScroll: true,
-    
+   
     /** api: config[ignoreFields]
      *  ``Array`` of field names from the store's records that should not be
      *  displayed in the grid.

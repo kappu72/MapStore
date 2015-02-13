@@ -130,10 +130,10 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      //Strings
    btnDetailsIconCls: "gxp-icon-getfeatureinfo",
    btnDetailsText:  "Notice Details",
-   btnDetailsTooltip: "Show Notice Details",
+   btnDetailsTooltip: "Show notice details",
    btnMapIconCls: "gxp-icon-geolocationmenu",
    btnMapText:  "Map",
-   btnMapTooltip: "Show Map",
+   btnMapTooltip: "Show map",
    noticeDetailsPanelTitle:"Notice Details",
 
     /** api: config[displayFeatureText]
