@@ -23,25 +23,28 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
 
   /** api: xtype = gxp_googlegeocodercombo */
     xtype: "gxp_gchistroygrid",
-
-    /** api: config[queryDelay]
-     *  ``Number`` Delay before the search occurs.  Default is 100ms.
-     */
-    queryDelay: 100,
     
     /** private: config[typeAhead]
      * the queryParameter for WFS
      */
     queryParam : "cql_filter",
-    typeAhead: false,
-    displayInfo: false,
-    hideTrigger:true,
     
-    /** api: config[displayField]
-     * If a template is not defined, this is the field to show.
-     * for the exemple below it can be "codice_ato"
+    title:'',
+    
+    
+   /** api: config[ignoreFields]
+     *  ``Array`` of field names from the store's records that should not be
+     *  displayed in the grid.
+     */    
+    
+     ignoreFields: null,
+    
+    /** api: config[colConfig]
+     *  ``Object``
+     *  An object with as keys the field names, which will provide the ability
+     *  to override the col configuration for that fileds
      */
-    displayField: "",
+    colConfig:null,
     
     /** api: config[mapPanel]
      *  the mapPanel
@@ -50,7 +53,7 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
     /** api: config[url]
      *  url to perform requests
      */
-    url:  '',
+    wfsURL:  '',
     /** api: config[typeName]
      *  the tipe name to search
      */
@@ -136,21 +139,76 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
 
     outputFormat: 'application/json',
     
-    
-    clearOnFocus:true,
     /** private: method[initComponent]
      *  Override
      */
     initComponent: function() {
         
-        this.store = new Ext.data.JsonStore({
+        this.ignoreFields = ["feature", "state", "fid"].concat(this.ignoreFields); 
+        this.store= new Ext.data.Store();
+        this.cm= new Ext.grid.ColumnModel({columns: []});
+        this.sm= new Ext.grid.RowSelectionModel({singleSelect:true});
+        this.bbar=[];
+        this.getSchema(this.createHistoryGrid,this);
+       
+      return gxp.grid.GcHistoryGrid.superclass.initComponent.apply(this, arguments);
+    },
+    
+//Recupero lo achema dal server per costruire records model e columns model 
+ getSchema: function(callback,scope){   
+        var schema = new GeoExt.data.AttributeStore({
+            url: this.wfsURL, 
+            baseParams: {
+                SERVICE: "WFS",
+                VERSION: "1.1.0",
+                REQUEST: "DescribeFeatureType",
+                TYPENAME: this.typeName,
+            },
+            autoLoad: true,
+            listeners: {
+                "load": function() {
+                    callback.call(scope, schema);
+                },
+                scope: this
+            }
+        });
+    },
+ 
+// Crea store, collumn model e gird dallo schema della WFS layer
+createHistoryGrid:function(schema){
+          this.schema=schema;
+          this.store=this.createStore(); 
+                 if(this.pageSize){
+                     this.getBottomToolbar().add( new Ext.PagingToolbar({
+                    store: this.store,
+                    pageSize: this.pageSize,
+                    renderTo:this.footer,
+                    afterPageText:"",
+                    beforePageText:"",
+                    listeners:{
+                        render: function(){
+                            this.last.setVisible(false);
+                            
+                        }
+                    }
+                }));
+                
+                }    
+        this.reconfigure(this.store, this.createColumnModel()); 
+        this.doLayout();
+        },
+ 
+//Crea JSON WFS STORE
+createStore:function(){
+                 
+        return store = new Ext.data.JsonStore({
             combo: this,
             root: this.root,
             messageProperty: 'crs',
             autoLoad: false,
-            fields:this.recordModel,
-            mapPanel: this.mapPanel,
-            url: this.url,
+            fields:this.createRecordsModel(),
+            mapPanel:this.mapPanel,
+            url: this.wfsURL,
             vendorParams: this.vendorParams,
             paramNames:{
                 start: "startindex",
@@ -195,7 +253,7 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
                     }
                     return;
                 }
-                console.log(this.reader.jsonData.crs);
+       
                // this.combo.crs = this.reader.jsonData.crs;
                 //custom total workaround
                 var estimateTotal = function(o,options,store){
@@ -237,38 +295,148 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
                 }
             }
             
-        });
+        });  
+           
+           
+ 
+           
+       },    
+//Crea record model a partire da schema    
+createRecordsModel: function() {
         
-       this.sm= new Ext.grid.RowSelectionModel({singleSelect:true});
-    
-    if(this.pageSize){
-      this.bbar = new Ext.PagingToolbar({
-                    store: this.store,
-                    pageSize: this.pageSize,
-                    renderTo:this.footer,
-                    afterPageText:"",
-                    beforePageText:"",
-                    listeners:{
-                        render: function(){
-                            this.last.setVisible(false);
-                            //this.inputItem.disable();
+                    
+                    var fields = [], geometryName;
+                    var geomRegex = /gml:((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry)).*/;
+                    var types = {
+                        "xsd:boolean": "boolean",
+                        "xsd:int": "int",
+                        "xsd:integer": "int",
+                        "xsd:short": "int",
+                        "xsd:long": "int",
+                        "xsd:date": "date",
+                        "xsd:string": "string",
+                        "xsd:float": "float",
+                        "xsd:decimal": "float"
+                    };
+                    this.schema.each(function(r) {
+                        var match = geomRegex.exec(r.get("type"));
+                        if (match) {
+                            geometryName = r.get("name");
+                            this.geometryType = match[1];
+                        } else {
+                            // TODO: use (and improve if needed) GeoExt.form.recordToField    
+                            var type = types[r.get("type")];
+                                var field = {
+                                name: r.get("name"),
+                                mapping: "properties."+r.get("name"),
+                                type: type
+                            };
+                            //TODO consider date type handling in OpenLayers.Format
+                            if (type == "date") {
+                                field.dateFormat = "Y-m-d\\Z";
+                            }
+                            fields.push(field);
                         }
-                    }
-                });
+                    }, this);
+                   
+                  return fields;  
+                    
+                    
+                              
+    },
+      /** api: method[getColumns]
+     *  :
+     *  :return: ``Array``
+     *  
+     *  Create the configuration for the column model form wfs schema.
+     */
+    getColumns: function() {
+        function getRenderer(format) {
+            return function(value) {
+                //TODO When http://trac.osgeo.org/openlayers/ticket/3131
+                // is resolved, change the 5 lines below to
+                // return value.format(format);
+                var date = value;
+                if (typeof value == "string") {
+                     date = Date.parseDate(value.replace(/Z$/, ""), "c");
+                }
+                return date ? date.format(format) : value;
+            };
+        }
+        
+       
+          var columns = [];     
+        var name, type, xtype, format, renderer;
+        this.schema.each(function(f) {
+            
                 
-       }
-      
-        return gxp.grid.GcHistoryGrid.superclass.initComponent.apply(this, arguments);
+                name = f.get("name");
+                type = f.get("type").split(":").pop();
+                 if (type.match(/^[^:]*:?((Multi)?(Point|Line|Polygon|Curve|Surface|Geometry))/)) {
+                    // exclude gml geometries
+                    return;
+                }
+                format = null;
+                switch (type) {
+                    case "date":
+                        format = this.dateFormat;
+                    case "datetime":
+                        format = format ? format : this.dateFormat + " " + this.timeFormat;
+                        xtype = undefined;
+                        renderer = getRenderer(format);
+                        break;
+                    case "boolean":
+                        xtype = "booleancolumn";
+                        break;
+                    case "string":
+                        xtype = "gridcolumn";
+                        break;
+                    default:
+                        xtype = "numbercolumn";
+                }
+            
+             var fieldCfg = GeoExt.form.recordToField(f);
+            if (this.ignoreFields.indexOf(name) === -1) {
+               var col={
+                    dataIndex: name,
+                    header: fieldCfg.fieldLabel,
+                    sortable: true,
+                    xtype: xtype,
+                    format: format,
+                    renderer: xtype ? undefined : renderer,
+                  //  editor: fieldCfg,
+                    editable:this.edit 
+                    
+                };
+                 if (this.colConfig && this.colConfig[name]) {
+                     
+                    Ext.apply(col, this.colConfig[name]);
+                }
+                columns.push(col);
+            }
+        }, this);
+        return columns;
     },
     
+    /** private: method[createColumnModel]
+     *  :return: ``Ext.grid.ColumnModel``
+     */
+    createColumnModel: function() {
+        var cols = this.getColumns();
+        return new Ext.grid.ColumnModel(
+            {
+               columns: cols,
+                }
+               );
+    },
+//Load wfs features 
    loadHistory: function(param){
         var params={};
-        if(this.oldParam===param)return;//If oalready loaded skip!
-        //pulisco lo store :-S
-       console.log("pulisco grid");
-       this.store.removeAll();
-       //this.doLayout();
-       if(!param)return;
+        if(this.oldParam===param)return;//If already loaded skip!
+     
+     
+      
+       if(!param)  this.store.removeAll();
       
               //Preparo il filtro con il valore passato ed eseguo la query
        this.vendorParams={cql_filter:this.queriableAttribute+this.predicate+""+param+""};

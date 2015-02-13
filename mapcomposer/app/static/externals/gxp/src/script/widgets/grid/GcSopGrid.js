@@ -35,7 +35,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     commitErrorTitle:'Errore Aggiornamenti',
     commitErrorMsg:'Impossibile aggiornare soprallugoihi',
    
-   allowDelete:true,
+    allowDelete:true,
    
     autoScroll: true,
     title: "Sopralluoghi",

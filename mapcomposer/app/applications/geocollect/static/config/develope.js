@@ -184,23 +184,55 @@
           "id": "featuremanager",
           "autoLoadFeatures":true,
           "pagingType":1,
-            "maxFeatures":20,
+            "maxFeatures":30,
              "autoSetLayer":false,
          
             "layer": {
          "source":"geosolutions",
          "name":"punti_abbandono"
-            }
+            }, "symbolizer":  {
+                        "Point": {
+                            "pointRadius": 4,
+                            "graphicName": "circle",
+                            "fillColor": "white",
+                            "fillOpacity": 1,
+                            "strokeWidth": 1,
+                            "strokeOpacity": 1,
+                            "strokeColor": "#333300"
+                            }
+                            }
         }
       
        ,{
           "ptype": "gxp_gcseggrid",
          "id":"gcseggrid",
           "featureManager": "featuremanager",
-          
+           
            "selectOnMap": false,
            "alwaysDisplayOnMap":false,
-           
+           "configHistory":{
+                    "title":"Storico",
+                    "queriableAttribute" : "GCID" ,
+                    "sortBy":"hist_date",
+                    "wfsURL": "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
+                    "typeName": "punti_abbandono_his",
+               
+               
+                "colConfig":{
+                          "status":{
+                        "header": "STATUS",
+                        "editor": { 
+                            "xtype": "combo",
+                            "store": ["Si","No","Forse"],
+                            "queryMode": "local",
+                            "typeAhead": true,
+                            "triggerAction": "all"
+                            }
+                        
+                            }
+                    }
+               
+           },
           "ignoreFields":["DATA_RILEV","MACROAREA","MICROAREA","CIRCOSCRIZ","MORFOLOGIA","INCLINAZIO","MORFOLOGI1","COPERTURA_","COPERTURA1","USO_PARCHE","USO_COMMER","USO_STRADA","USO_ABBAND","PRESUNZION",
                             "AREA_PRIVA","AREA_PUBBL","ALTRE_CARA","DISTANZA_U","DIMENSIONI","RIFIUTI_NO","RIFIUTI_PE","QUANTITA_R","STATO_FISI","ODORE","MODALITA_S","PERCOLATO","VEGETAZION","STABILITA",
                             "INSEDIAMEN","INSEDIAME1","INSEDIAME2","DISTANZA_C","DISTANZA_P","INSEDIAME3","BOSCATE","BOSCATE_AB","AGRICOLO","AGRICOLO_A","TORRENTI_R","NOME_TORRE","RISCHIO_ES","RIFIUTI_IN",

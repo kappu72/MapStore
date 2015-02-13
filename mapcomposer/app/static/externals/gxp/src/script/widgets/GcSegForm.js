@@ -385,7 +385,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
 
         this.b = new Ext.ButtonGroup({
             hidden: this.readOnly,
-            
+           width:400,
            // renderTo:'featuresegridbutton',
             items: [
                 this.editButton,
@@ -454,12 +454,12 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
         if(!this.editing) {
             this.editing = true;
          //   this.anc && this.unanchorPopup();
-
+            this.fireEvent( "startsegediting",this);
             this.editButton.hide();
             this.deleteButton.hide();
             this.saveButton.show();
             this.cancelButton.show();
-            
+            this.cancelButton.ownerCt.doLayout();
             this.geometry = this.feature.geometry.clone();
             this.attributes = Ext.apply({}, this.feature.attributes);
 
@@ -470,7 +470,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
             this.feature.layer.map.addControl(this.modifyControl);
             this.modifyControl.activate();
             this.modifyControl.selectFeature(this.feature);
-            this.fireEvent( "startsegediting",this);
+            
         }
     },
     
@@ -510,6 +510,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
                     this.fireEvent("canceledit", this, null);
                 
                 } else {
+                    //Caso nel quale cancello cambiamenti senza salvare
                     var layer = feature.layer;
                     layer.drawFeature(feature, {display: "none"});
                     feature.geometry = this.geometry;

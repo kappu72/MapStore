@@ -246,10 +246,7 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             },
             eventListeners: {
                 "activate": function() {
-                    //Attivo il select della griglia
-                    gcseg.selectControl=this.selectControl;
-                    gcseg.segGrid.getSelectionModel().unlock();
-                    
+                  
                     if (this.autoLoadFeatures === true || featureManager.paging) {
                         this.target.mapPanel.map.events.register(
                             "click", this, this.noFeatureClick
@@ -258,16 +255,15 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     featureManager.showLayer(
                         this.id, this.showSelectedOnly && "selected"
                     );
-                   // this.selectControl.unselectAll(
-                      //  popup && popup.editing && {except: popup.feature}
-                   // );
                   if(featureLayer.selectedFeatures[0]) this.selectControl.highlight(featureLayer.selectedFeatures[0]);
+
+                
 
                 },
                 "deactivate": function() {
-                    gcseg.segGrid.toggleInfo.toggle(false);
+                  //  gcseg.segGrid.toggleInfo.toggle(false);
                     gcseg.segGrid.getSelectionModel().clearSelections();
-                    gcseg.segGrid.getSelectionModel().lock();
+                    //gcseg.segGrid.getSelectionModel().lock();
                     if (this.autoLoadFeatures === true || featureManager.paging) {
                         this.target.mapPanel.map.events.unregister(
                             "click", this, this.noFeatureClick
@@ -307,7 +303,8 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             "featureselected": function(evt) {
                var feature = evt.feature;
                 var featureStore = featureManager.featureStore;
-                if(true) {
+                //if(this.selectControl.active) 
+                {
                     
                     //Genero sempre la scheda per editing anche se non la uso!!:-D
                         segForm= new gxp.plugins.GcSegForm(  {
@@ -316,10 +313,23 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                         allowDelete: true,  
                         listeners: {
                             "startsegediting": function() {
+                                gcseg.segEditing=true;
+                                if(!this.selectControl.active) this.selectControl.activate();
+                                this.actions[0].items[0].disable();
+                                this.actions[1].items[0].disable();
                                  gcseg.segGrid.getSelectionModel().lock();
+                                 featureManager.showLayer(
+                                this.id, this.showSelectedOnly && "selected"
+                            );
                             },
                             "stopsegediting": function() {
+                                gcseg.segEditing=false;
                                  gcseg.segGrid.getSelectionModel().unlock();
+                                  var r = gcseg.segGrid.getSelectionModel().getSelected();
+                                  if(r)this.selectControl.select(r.data.feature);
+                                this.actions[0].items[0].enable();
+                                this.actions[1].items[0].enable();
+                                
                             },
                             "featuremodified": function(popup, feature) {
                                 console.log(feature.state);

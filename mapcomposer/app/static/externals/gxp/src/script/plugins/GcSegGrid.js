@@ -330,7 +330,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         var mapPanelContainer= this.target.mapPanelContainer;
         var target=this.target;
         
-        console.log(featureManager);
+        console.log(this);
        
         
         //Creo il pannello che carica i dettagli segnalazione!!
@@ -357,61 +357,17 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 activeItem:0  ,
             
                 height:500,
-                items:[{
+                items:[Ext.apply({
                     xtype:"gxp_gchistroygrid",
-                    title:"Storico",
                     ref:'../seg_history',
                     mapPanel:this.target.mapPanel,
-                    queriableAttribute : 'GCID' ,
-                    sortBy:'hist_date',
-                    url: "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
-                    typeName: "punti_abbandono_his",
-                                 recordModel: [
-                             {name: 'update', mapping: 'properties.hist_date'},    
-                             {name: 'codice', mapping: 'properties.CODICE'},
-                             {name: 'macroarea', mapping: 'properties.MACROAREA'},
-                             {name: 'microarea', mapping: 'properties.MICROAREA'},
-                             {name: 'circoscrizione', mapping: 'properties.CIRCOSCRIZIONE'},
-                             {name: 'morfologia', mapping: 'properties.MORFOLOGIA'},
-                             {name: 'inclinazione', mapping: 'properties.INCLINAZIO'},
-                             {name: 'u_abbandonato', mapping: 'properties.USO_ABBAND'},
-                             {name: 'u_agricolo', mapping: 'properties.USO_AGRICO'},
-                             {name: 'u_commerciale', mapping: 'properties.USO_COMMER'},
-                             {name: 'u_parcheggio', mapping: 'properties.USO_PARCHE'},
-                             {name: 'u_strada', mapping: 'properties.USO_STRADA'},
-                             {name: 'r_no', mapping: 'properties.RIFIUTI_NO'},
-                             {name: 'r_pe', mapping: 'properties.RIFIUTI_PE'}
-                         
-                            ],
-                    cm: new Ext.grid.ColumnModel({
-                columns: [
-                    { header: "AGGIORNAMENTO",dataIndex:"update"},
-                    { header: "CODICE",dataIndex:"codice"},
-                    { header: "MACROAREA",dataIndex:"macroarea"},
-                    { header: "MICROAREA",dataIndex:"microarea"},
-                    { header: "CIRCOSCRIZIONE",dataIndex:"circoscrizione"},
-                    { header: "MORFOLOGIA",dataIndex:"morfologia"},
-                    { header: "INCLINAZIONE",dataIndex:"inclinazione"},
-                    { header: "USO_ABBAND",dataIndex:"u_abbandonato"},
-                    { header: "USO_AGRICO",dataIndex:"u_agricolo"},
-                    { header: "USO_COMMER",dataIndex:"u_commerciale"},
-                    { header: "USO_PARCHE",dataIndex:"u_parcheggio"},
-                    { header: "USO_STRADA",dataIndex:"u_strada"},
-                     { header: "RIFIUTI_NO",dataIndex:"r_no"},
-                    { header: "RIFIUTI_PE",dataIndex:"r_pe"}
-
-                    ]
-            }),
-           autoScroll: true
-           
-                    
-                },{
+                    },this.initialConfig.configHistory||{}),{
                     xtype:"gxp_gcsopgrid",
                     title:"Sopralluoghi",
                     target:this.target,
                     wfsURL: "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
 
-                    source: "geosolutions",
+                   // source: "geosolutions",
                     typeName: "rilevamenti_effettuati",
                     ref:"../sop",
                     queriableAttribute : 'MY_ORIG_ID',
@@ -746,10 +702,10 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 tooltip: "Apri pannello dettaglio segnalazione!",
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) { 
-                    
+                    console.log(this.segdet.seg);
                   this.showInfo=(pressed)? true:false;
                   (!pressed)? this.segdet.hideMe():this.segdet.showMe(this.output[0].selModel.getSelected());
-                  (pressed)?this.segGrid.getTopToolbar().items.first().disable() : this.segGrid.getTopToolbar().items.first().enable();  
+                if(!this.segEditing) (pressed)?this.segGrid.getTopToolbar().items.first().disable() : this.segGrid.getTopToolbar().items.first().enable();  
                 },
                 scope:this
             },{
@@ -853,7 +809,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         var featureGrid = gxp.plugins.GcSegGrid.superclass.addOutput.call(this, config);
         
         this.segGrid=featureGrid;
-        this.segGrid.getSelectionModel().lock(); 
+      //  this.segGrid.getSelectionModel().lock(); 
        
         featureGrid.selModel.on('rowselect',function(sm, rowIndex, r ){
                                     
@@ -931,7 +887,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
 
 
     enableTools: function(){
-        this.segGrid.zommInfo.enable();
+                       this.segGrid.zommInfo.enable();
                        var btns=this.segGrid.getTopToolbar().items.last();
                        if (btns!=this.segGrid.fBtnGroup)btns.enable();
 
