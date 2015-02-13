@@ -702,9 +702,19 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 tooltip: "Apri pannello dettaglio segnalazione!",
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) { 
-                    console.log(this.segdet.seg);
                   this.showInfo=(pressed)? true:false;
-                  (!pressed)? this.segdet.hideMe():this.segdet.showMe(this.output[0].selModel.getSelected());
+                  if(!pressed){ 
+                      this.segdet.hideMe();
+                      btn.setIconClass("gxp-icon-getfeatureinfo");
+                        btn.setText("Dettagli");
+                 btn.setTooltip("Apri pannello dettaglio segnalazione!");
+                     
+                      }else{
+                          this.segdet.showMe(this.output[0].selModel.getSelected());
+                           btn.setIconClass("gxp-icon-geolocationmenu");
+                                   btn.setText("Mappa");
+                                btn.setTooltip("Mostra mappa!");
+                          }
                 if(!this.segEditing) (pressed)?this.segGrid.getTopToolbar().items.first().disable() : this.segGrid.getTopToolbar().items.first().enable();  
                 },
                 scope:this
