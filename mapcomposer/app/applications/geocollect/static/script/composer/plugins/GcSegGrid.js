@@ -707,7 +707,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                       this.segdet.hideMe();
                       btn.setIconClass("gxp-icon-getfeatureinfo");
                         btn.setText("Dettagli");
-                 btn.setTooltip("Apri pannello dettaglio segnalazione!");
+                    btn.setTooltip("Apri pannello dettaglio segnalazione!");
                      
                       }else{
                           this.segdet.showMe(this.output[0].selModel.getSelected());
@@ -724,13 +724,13 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 iconCls: 'gxp-icon-zoom-to',
                 scope: this,
                 handler: function(cmp){
-                    
+                    if(this.segGrid.toggleInfo.pressed===true)this.segGrid.toggleInfo.toggle(false);
                     var selection = this.segGrid.getSelectionModel().getSelections()[0];
                     var feature = selection.data.feature;
                    
                     if(feature){
                         var geom=feature.geometry;
-                        this.target.mapPanel.map.setCenter(new OpenLayers.LonLat(geom.x,geom.y),13);
+                        this.target.mapPanel.map.setCenter(new OpenLayers.LonLat(geom.x,geom.y),13,false,true);
                       
                     }
                 }               
