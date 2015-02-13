@@ -97,12 +97,24 @@
         "source":"geosolutions",
         "name":"punti_abbandono",
         "infoFormat": "application/vnd.ogc.gml",
-        "title":"punti_abbandono",
+        "title":"Segnalazioni Rifiuti Abbandonati",
         "visibility":true,
         "opacity":1,
         "selected":false,
         "format":"image/png",
         "styles":"abbandono",
+        "transparent":true
+        },
+        {
+        "source":"geosolutions",
+        "name":"rilevamenti_effettuati",
+        "infoFormat": "application/vnd.ogc.gml",
+        "title":"Sopralluoghi",
+        "visibility":true,
+        "opacity":1,
+        "selected":false,
+        "format":"image/png",
+     
         "transparent":true
         }
         ]},
@@ -224,6 +236,23 @@
                                 }
                             }
                     }
+           },"configSurvey":{
+               
+               "wfsURL": "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
+                "typeName": "rilevamenti_effettuati",
+                "queriableAttribute" : "MY_ORIG_ID",
+                    "colConfig":{
+                        "RIMOZIONE":{
+                        "header": "RIMOZIONE",
+                        "editor": { 
+                            "xtype": "combo",
+                            "store": ["Si","No","Forse"],
+                            "queryMode": "local",
+                            "typeAhead": true,
+                            "triggerAction": "all"
+                            }
+                        }
+                    }  
            },
           "ignoreFields":["DATA_RILEV","MACROAREA","MICROAREA","CIRCOSCRIZ","MORFOLOGIA","INCLINAZIO","MORFOLOGI1","COPERTURA_","COPERTURA1","USO_PARCHE","USO_COMMER","USO_STRADA","USO_ABBAND","PRESUNZION",
                             "AREA_PRIVA","AREA_PUBBL","ALTRE_CARA","DISTANZA_U","DIMENSIONI","RIFIUTI_NO","RIFIUTI_PE","QUANTITA_R","STATO_FISI","ODORE","MODALITA_S","PERCOLATO","VEGETAZION","STABILITA",

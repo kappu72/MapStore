@@ -315,24 +315,6 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         
     },
     
-   /*
-    {
-                xtype:"gxp_segform",
-                region:'west',
-                ref:'seg',
-                width:280,
-                border:'true',
-                featureManager:featureManager,
-                 autoScroll: true,
-            }
-    * 
-    * 
-    * */
-         
-
-    
-    
-    
     /** api: method[addOutput]
      */
     addOutput: function(config) {
@@ -375,31 +357,11 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     },this.initialConfig.configHistory||{}),
                     Ext.apply({
                     xtype:"gxp_gcsopgrid",
-                    
                     target:this.target,
                     wfsURL: "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
-
-                   // source: "geosolutions",
                     typeName: "rilevamenti_effettuati",
                     ref:"../sop",
-                    queriableAttribute : 'MY_ORIG_ID',
-                     //queriableAttribute : 'GCID',
-                    autoScroll: true,
-                   
-                    colConfig:{
-                        'RIMOZIONE':{
-                        header: 'RIMOZIONE',
-                        editor: { 
-                            xtype: 'combo',
-                            store: ['Si','No','Forse'],
-                            queryMode: 'local',
-                            typeAhead: true,
-                            triggerAction: 'all',
-                            }
-                        
-                            }
-                    }
-                },this.initialConfig.configSurvay||{})  ]
+                },this.initialConfig.configSurvey||{})  ]
                 
             }
           
@@ -414,16 +376,11 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 }
             },
             showMe:function(record){
-                
-                 
-
-              if(!this.target.mapPanelContainer.items.get(2).isVisible()){
-                  
+                if(!this.target.mapPanelContainer.items.get(2).isVisible()){
                   this.target.toolbar.hide();
-                
-                //Se visibile cambi solo i dati delle tabelle altrimetni lo attivi
-                var west = Ext.getCmp('west');
-                //Nascondo west se è aperto
+                    //Se visibile cambi solo i dati delle tabelle altrimetni lo attivi
+                    var west = Ext.getCmp('west');
+                    //Nascondo west se è aperto
                 if(west.isVisible()) {
                     west.collapse();
                     this.westVisible=true;
