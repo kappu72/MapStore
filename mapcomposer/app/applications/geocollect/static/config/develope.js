@@ -1,26 +1,23 @@
 {
-
    "scaleOverlayMode": "basic",
-   "gsSources":{ 
-    "geosolutions":
-     {
-            "ptype": "gxp_wmssource",
-            "url": "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
-            "title": "GeoSolutions GeoServer",
-            "SRS": "EPSG:900913",
-            "version":"1.1.1",
-            "layersCachedExtent": [
+   "gsSources": { 
+        "geosolutions":
+                {
+                "ptype": "gxp_wmssource",
+                "url": "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
+                "title": "GeoSolutions GeoServer",
+                "SRS": "EPSG:900913",
+                "version":"1.1.1",
+                "layersCachedExtent": [
                 -20037508.34,-20037508.34,
                 20037508.34,20037508.34
-            ],
-            "layerBaseParams":{
+                ],
+                "layerBaseParams":{
                 "FORMAT":"image/png8",
                 "TILED":true
-            }
-        },
-    
- 
-        "mapquest": {
+                }
+            },
+     "mapquest": {
             "ptype": "gxp_mapquestsource"
         }, 
         "osm": { 
@@ -50,7 +47,7 @@
             -20037508.34, -20037508.34,
             20037508.34, 20037508.34
         ],
-        "layers": [
+        "layers" : [
             {
                 "source": "google",
                 "title": "Google Roadmap",
@@ -112,10 +109,10 @@
 "portalConfig": {
         "header":false
     },
-"customComposerWest" :{
+"customComposerWest" : {
      "region":"east",
      "collapsed":true,
-                       "collapseMode": null
+     "collapseMode": null
 
  }, 
     "customPanels":[ 
@@ -137,9 +134,9 @@
                     "header":false,       
                     "flex":2,
                     "border": false,
-                    "id": "seglist",
+                    "id": "listasegnalazioni",
                     "layout": "fit",
-                    
+                    "width": 380,
                     "tbar":[]
                 }, {
                     "xtype": "panel",
@@ -216,22 +213,18 @@
                     "sortBy":"hist_date",
                     "wfsURL": "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
                     "typeName": "punti_abbandono_his",
-               
-               
-                "colConfig":{
-                          "status":{
-                        "header": "STATUS",
-                        "editor": { 
-                            "xtype": "combo",
-                            "store": ["Si","No","Forse"],
-                            "queryMode": "local",
-                            "typeAhead": true,
-                            "triggerAction": "all"
-                            }
-                        
+                     "colConfig":{
+                            "status":{
+                            "header": "STATUS",
+                            "editor": { 
+                                "xtype": "combo",
+                                "store": ["Si","No","Forse"],
+                                "queryMode": "local",
+                                "typeAhead": true,
+                                "triggerAction": "all"
+                                }
                             }
                     }
-               
            },
           "ignoreFields":["DATA_RILEV","MACROAREA","MICROAREA","CIRCOSCRIZ","MORFOLOGIA","INCLINAZIO","MORFOLOGI1","COPERTURA_","COPERTURA1","USO_PARCHE","USO_COMMER","USO_STRADA","USO_ABBAND","PRESUNZION",
                             "AREA_PRIVA","AREA_PUBBL","ALTRE_CARA","DISTANZA_U","DIMENSIONI","RIFIUTI_NO","RIFIUTI_PE","QUANTITA_R","STATO_FISI","ODORE","MODALITA_S","PERCOLATO","VEGETAZION","STABILITA",
@@ -239,11 +232,10 @@
                             "PROBABILE","IMPATTO_ES","POZZI_FALD","CRITICITA","IMPATTO_CO","NOTE","PULIZIA","DISSUASION","VALORE_GRA","PROBABILE_","FATTIBILE_","VALORE_FAT","LATITUDINE","LONGITUDIN",
                             "GCID","ID1","VALORE_RIS","SOCIO_PAES","VALORE_SOC","FATTIBILIT","GMROTATION","MY_ORIG_ID","USO_AGRICO"],
           "outputConfig": {
-              "id": "featuregrid",
-              
+              "id": "grissegnalazioni",
               "header":false
           },
-         "outputTarget": "seglist",
+         "outputTarget": "listasegnalazioni",
           "exportFormats": ["CSV","shape-zip"]
         }, 
           {  
@@ -253,7 +245,7 @@
             "gcseg":"gcseggrid", 
             "toggleGroup": "toolGroup",
             "showSelectedOnly":false,
-            "actionTarget": {"target": "featuregrid.tbar", "index": 0}
+            "actionTarget": {"target":"grissegnalazioni.tbar", "index": 0}
         },
         {
           "ptype": "gxp_spatialqueryform",
@@ -344,12 +336,5 @@
             "toggleGroup": "toolGroup",
             "actionTarget": {"target": "paneltbar", "index": 20}
         }
-    
-        
-        
-        
-      
-    ]
-    
-
+    ]  
 }
