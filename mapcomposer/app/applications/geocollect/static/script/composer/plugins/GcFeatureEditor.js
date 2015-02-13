@@ -7,8 +7,8 @@
 */
 
 /**
- * @requires plugins/ClickableFeatures.js
- * @requires widgets/FeatureEditPopup.js
+ * requires plugins/ClickableFeatures.js
+ * requires widgets/FeatureEditPopup.js
  */
 
 /** api: (define)
