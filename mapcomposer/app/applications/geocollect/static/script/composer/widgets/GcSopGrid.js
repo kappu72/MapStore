@@ -21,24 +21,26 @@ Ext.namespace("gxp.grid");
  */
 gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
-    deleteMsgTitle:'Elimina riga',
-    deleteMsg:'Vuoi eliminare la riga selezionato',
-    deleteButtonText:'Elimna',
-    deleteButtonTooltip:'Elimna riga selezionata',
-    editButtonText:'Modifica',
-    editButtonTooltip:'Modifica riga  selezionata',
-    saveButtonText:'Salva',
-    saveButtonTooltip:'Salva modifiche riga  selezionata',
-    cancelButtonText:'Annulla',
-    cancelButtonTooltip:'Anulla modifiche',
-    saveOrCancelEdit:'Salva od annula modifiche',
-    commitErrorTitle:'Errore Aggiornamenti',
-    commitErrorMsg:'Impossibile aggiornare soprallugoihi',
+    title:'Surveys',
+    deleteMsgTitle:'Delete',
+    deleteMsg:'Are you sure you want do delete this row',
+    deleteButtonText:'Delete',
+    deleteButtonTooltip:'Delete Selected Row',
+    editButtonText:'Edit',
+    editButtonTooltip:'Edit Slected Row',
+    saveButtonText:'Save',
+    saveButtonTooltip:'Salva Changes',
+    cancelButtonText:'Cancel',
+    cancelButtonTooltip:'Cancel Changes',
+    saveOrCancelEdit:'Save or cancel changes',
+    commitErrorTitle:'Error saving',
+    commitErrorMsg:'Changes not saved!',
    
+    
     allowDelete:true,
    
     autoScroll: true,
-    title: "Sopralluoghi",
+    
     /** api: config[ignoreFields]
      *  ``Array`` of field names from the store's records that should not be
      *  displayed in the grid.

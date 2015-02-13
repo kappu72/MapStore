@@ -29,7 +29,7 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
      */
     queryParam : "cql_filter",
     
-    title:'',
+    title:'History',
     
     
    /** api: config[ignoreFields]

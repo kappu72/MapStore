@@ -33,6 +33,9 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     /** api: ptype = gxp_featuregrid */
     ptype: "gxp_gcseggrid",
 
+
+   
+
     /** private: property[schema]
      *  ``GeoExt.data.AttributeStore``
      */
@@ -124,7 +127,15 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     
     deleteButtonText: 'Delete',
     
-    
+     //Strings
+   btnDetailsIconCls: "gxp-icon-getfeatureinfo",
+   btnDetailsText:  "Notice Details",
+   btnDetailsTooltip: "Show Notice Details",
+   btnMapIconCls: "gxp-icon-geolocationmenu",
+   btnMapText:  "Map",
+   btnMapTooltip: "Show Map",
+   noticeDetailsPanelTitle:"Notice Details",
+
     /** api: config[displayFeatureText]
      * ``String``
      * Text for feature display button (i18n).
@@ -336,7 +347,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         //Creo il pannello che carica i dettagli segnalazione!!
          this.segdet=
         new Ext.Panel({
-            title:"Dettagli segnalazione",
+            title:this.noticeDetailsPanelTitle,
             target: this.target,
             westVisible:false,
             layout:'border', 
@@ -361,9 +372,10 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     xtype:"gxp_gchistroygrid",
                     ref:'../seg_history',
                     mapPanel:this.target.mapPanel,
-                    },this.initialConfig.configHistory||{}),{
+                    },this.initialConfig.configHistory||{}),
+                    Ext.apply({
                     xtype:"gxp_gcsopgrid",
-                    title:"Sopralluoghi",
+                    
                     target:this.target,
                     wfsURL: "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
 
@@ -387,10 +399,10 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                         
                             }
                     }
-                }]
+                },this.initialConfig.configSurvay||{})  ]
                 
             }
-            
+          
             ],
             
             
@@ -697,23 +709,23 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 items:[{
                 ref:'/../toggleInfo',
                 disabled:false,
-                iconCls: "gxp-icon-getfeatureinfo",
-                text:"Dettagli",
-                tooltip: "Apri pannello dettaglio segnalazione!",
+                iconCls:this.btnDetailsIconCls ,
+                text:this.btnDetailsText  ,
+                tooltip: this.btnDetailsTooltip ,
                 enableToggle: true,
                 toggleHandler: function(btn, pressed) { 
                   this.showInfo=(pressed)? true:false;
                   if(!pressed){ 
                       this.segdet.hideMe();
-                      btn.setIconClass("gxp-icon-getfeatureinfo");
-                        btn.setText("Dettagli");
-                    btn.setTooltip("Apri pannello dettaglio segnalazione!");
+                      btn.setIconClass(this.btnDetailsIconCls);
+                        btn.setText(this.btnDetailsText);
+                    btn.setTooltip(this.btnDetailsTooltip);
                      
                       }else{
                           this.segdet.showMe(this.output[0].selModel.getSelected());
-                           btn.setIconClass("gxp-icon-geolocationmenu");
-                                   btn.setText("Mappa");
-                                btn.setTooltip("Mostra mappa!");
+                                                  btn.setIconClass(this.btnMapIconCls);
+                                                btn.setText(this.btnMapText);
+                                            btn.setTooltip(this.btnMapTooltip);
                           }
                 if(!this.segEditing) (pressed)?this.segGrid.getTopToolbar().items.first().disable() : this.segGrid.getTopToolbar().items.first().enable();  
                 },

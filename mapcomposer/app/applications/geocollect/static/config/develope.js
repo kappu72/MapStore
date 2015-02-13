@@ -117,7 +117,7 @@
  }, 
     "customPanels":[ 
                {
-                 "title": "Segnalazioni", 
+                
                 "layout" : "vBox",
                 "width": 380,
                  "minSize": 100,
@@ -208,7 +208,6 @@
            "selectOnMap": false,
            "alwaysDisplayOnMap":false,
            "configHistory":{
-                    "title":"Storico",
                     "queriableAttribute" : "GCID" ,
                     "sortBy":"hist_date",
                     "wfsURL": "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
