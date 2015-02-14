@@ -332,11 +332,12 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                 
                             },
                             "featuremodified": function(popup, feature) {
-                                console.log(feature.state);
                                 featureStore.on({
                                     write: {
-                                        fn: function() {
-                                   
+                                        fn: function(st,act) {
+                                         
+                                        if(act=='update')gcseg.segdet.seg_history.refreshHistory();
+        
                                         },
                                         single: true
                                     },

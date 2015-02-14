@@ -448,9 +448,12 @@ createRecordsModel: function() {
            }});
        }else this.store.load();
        this.oldParam=param;
-   }
+   },
     
- 
+ refreshHistory:function(){
+     console.log("Ricarico history");
+     this.store.reload();
+ }
  
  } );
  Ext.reg(gxp.grid.GcHistoryGrid.prototype.xtype, gxp.grid.GcHistoryGrid);
