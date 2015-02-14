@@ -299,6 +299,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
         
         this.editButton = new Ext.Button({
             text: this.editButtonText,
+            width:60,
             tooltip: this.editButtonTooltip,
             iconCls: "edit",
             handler: this.startEditing,
@@ -309,6 +310,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
             text: this.deleteButtonText,
             tooltip: this.deleteButtonTooltip,
             iconCls: "delete",
+             width:60,
             hidden: !this.allowDelete,
             handler: this.deleteFeature,
             scope: this
@@ -318,6 +320,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
             text: this.cancelButtonText,
             tooltip: this.cancelButtonTooltip,
             iconCls: "cancel",
+             width:60,
             hidden: true,
             handler: function() {
                 this.stopEditing(false);
@@ -328,6 +331,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
         this.saveButton = new Ext.Button({
             text: this.saveButtonText,
             tooltip: this.saveButtonTooltip,
+             width:60,
             iconCls: "save",
             hidden: true,
             handler: function() {

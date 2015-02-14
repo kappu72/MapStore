@@ -128,10 +128,10 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     deleteButtonText: 'Delete',
     
      //Strings
-   btnDetailsIconCls: "gxp-icon-getfeatureinfo",
+   btnDetailsIconCls: "gc-icon-notice",
    btnDetailsText:  "Notice Details",
    btnDetailsTooltip: "Show notice details",
-   btnMapIconCls: "gxp-icon-geolocationmenu",
+   btnMapIconCls: "gc-icon-map",
    btnMapText:  "Map",
    btnMapTooltip: "Show map",
    noticeDetailsPanelTitle:"Notice Details",
@@ -662,10 +662,13 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             tbar:[{
                 xtype:'buttongroup',
                 ref:'/zommInfo',
+                
                 disabled:true,
-                items:[{
+                items:[
+                {
                 ref:'/../toggleInfo',
                 disabled:false,
+                width:100,
                 iconCls:this.btnDetailsIconCls ,
                 text:this.btnDetailsText  ,
                 tooltip: this.btnDetailsTooltip ,
@@ -713,11 +716,12 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 ref:'./fBtGroup',
                 disabled:true,
                 items:[{
+                    width:60,
                     text: this.editButtonText,
                     iconCls: "edit",
                 },{
                     text: this.deleteButtonText,
-                  
+                  width:60,
                     iconCls: "delete",
                     
                 }]
@@ -771,16 +775,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                         "clearfeatures": onClear
                     });
                 },
-             /*   contextmenu: function(event) {
-                    if (featureGrid.contextMenu.items.getCount() > 0) {
-                        var rowIndex = featureGrid.getView().findRowIndex(event.getTarget());
-                        if (rowIndex !== false) {
-                            featureGrid.getSelectionModel().selectRow(rowIndex);
-                            featureGrid.contextMenu.showAt(event.getXY());
-                            event.stopEvent();
-                        }
-                    }
-                },*/
+            
                 scope: this
             },
           

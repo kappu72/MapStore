@@ -114,7 +114,6 @@
         "opacity":1,
         "selected":false,
         "format":"image/png",
-     
         "transparent":true
         }
         ]},
@@ -131,7 +130,7 @@
                {
                 
                 "layout" : "vBox",
-                "width": 380,
+                "width": 400,
                  "minSize": 100,
                 "maxSize": 250,
                  "collapsible": true,
@@ -148,7 +147,7 @@
                     "border": false,
                     "id": "listasegnalazioni",
                     "layout": "fit",
-                    "width": 380,
+                    "width": 400,
                     "tbar":[]
                 }, {
                     "xtype": "panel",
@@ -156,7 +155,7 @@
                             
                     "border": false,
                     "flex":1,
-                    "width": 380,
+                    "width": 400,
                     "id": "qrypnl",
                     "layout": "fit",
                     "header": true
