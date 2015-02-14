@@ -99,8 +99,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         if (!this.timeFormat) {
             this.timeFormat = Ext.form.TimeField.prototype.format;
         }
-      console.log(this.target);
-            this.sm= new Ext.grid.RowSelectionModel({
+        this.sm= new Ext.grid.RowSelectionModel({
                 
            singleSelect:true,
            listeners:{ 
@@ -195,7 +194,9 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
             
             
             ];
-       
+        this.on('render',function(){
+            if(!this.mask) this.mask=  new Ext.LoadMask(this.id, {msg:"Please wait...",store:this.store});
+        },this);
         gxp.grid.GcSopGrid.superclass.initComponent.call(this);       
       
       var me=this;
@@ -227,9 +228,8 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
         });
     },
      loadSop: function(param){
-         
 
-                    if(this.getSelectionModel().getSelected() && this.getSelectionModel().getSelected().dirty) {
+     if(this.getSelectionModel().getSelected() && this.getSelectionModel().getSelected().dirty) {
                                         Ext.MessageBox.show({
                                         msg: this.saveOrCancelEdit,
                                          buttons: Ext.Msg.OK,

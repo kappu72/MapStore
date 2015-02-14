@@ -194,7 +194,7 @@
           "pagingType":1,
             "maxFeatures":30,
              "autoSetLayer":false,
-         
+         "format":"JSON",
             "layer": {
          "source":"geosolutions",
          "name":"punti_abbandono"

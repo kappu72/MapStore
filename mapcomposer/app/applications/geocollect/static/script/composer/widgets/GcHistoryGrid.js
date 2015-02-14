@@ -150,7 +150,9 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
         this.sm= new Ext.grid.RowSelectionModel({singleSelect:true});
         this.bbar=[];
         this.getSchema(this.createHistoryGrid,this);
-       
+        this.on('render',function(){
+            if(!this.mask) this.mask=  new Ext.LoadMask(this.id, {msg:"Please wait...",store:this.store});
+        },this);
       return gxp.grid.GcHistoryGrid.superclass.initComponent.apply(this, arguments);
     },
     
@@ -193,7 +195,9 @@ createHistoryGrid:function(schema){
                     }
                 }));
                 
-                }    
+                }  
+                
+                 
         this.reconfigure(this.store, this.createColumnModel()); 
         this.doLayout();
         },
