@@ -50,6 +50,10 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     createFeatureActionTip: "Crea nuova segnalazione",
 
+
+
+     saveOrCancelEdit:'Save or cancel changes',
+
     /** api: config[createFeatureActionText]
      *  ``String``
      *  Create new feature text.
@@ -147,7 +151,7 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         var featureManager = this.target.tools[this.featureManager];
         var featureLayer = featureManager.featureLayer;
         var  gcseg= this.target.tools[this.gcseg];
-
+        
         // optionally set up snapping
         var snapId = this.snappingAgent;
         if (snapId) {
@@ -206,7 +210,36 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             "beforeclearfeatures": intercept.createDelegate(this, "clearFeatures", 1),
             scope: this
         });
-        
+        featureManager.on(
+            "beforequery", function(){
+                
+                if(gcseg.segEditing){
+                    
+                     this.stopQueryMsg();
+                    return false;}
+                
+            },this);
+
+                featureManager.on(
+            "beforesetpage", function(){
+                if(gcseg.segEditing){
+                    
+                     this.stopQueryMsg();
+                    return false;}
+                
+            },this);
+
+          featureManager.on(
+            "beforeclearfeatures", function(){
+                if(gcseg.segEditing){
+                    
+                     this.stopQueryMsg();
+                    return false;}
+                
+            },this);
+            
+            
+            
         this.drawControl = new OpenLayers.Control.DrawFeature(
             featureLayer,
             OpenLayers.Handler.Point, 
@@ -318,15 +351,17 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                 this.actions[0].items[0].disable();
                                 this.actions[1].items[0].disable();
                                  gcseg.segGrid.getSelectionModel().lock();
+                                this.target.mapPanelContainer.getTopToolbar().disable();
                                  featureManager.showLayer(
                                 this.id, this.showSelectedOnly && "selected"
                             );
                             },
                             "stopsegediting": function() {
                                 gcseg.segEditing=false;
-                                 gcseg.segGrid.getSelectionModel().unlock();
-                                  var r = gcseg.segGrid.getSelectionModel().getSelected();
-                                  if(r)this.selectControl.select(r.data.feature);
+                                gcseg.segGrid.getSelectionModel().unlock();
+                                this.target.mapPanelContainer.getTopToolbar().enable();
+                                var r = gcseg.segGrid.getSelectionModel().getSelected();
+                                if(r)this.selectControl.select(r.data.feature);
                                 this.actions[0].items[0].enable();
                                 this.actions[1].items[0].enable();
                                 
@@ -447,7 +482,18 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
         
         return actions;
     },
-    
+       stopQueryMsg:function(){
+            
+                    Ext.MessageBox.show({
+                                        msg: this.saveOrCancelEdit,
+                                         buttons: Ext.Msg.OK,
+                                         animEl: 'elId',
+                                        icon: Ext.MessageBox.INFO
+                                     });
+            
+            
+        },
+
     /** private: method[onLayerChange]
      *  :arg mgr: :class:`gxp.plugins.FeatureManager`
      *  :arg layer: ``GeoExt.data.LayerRecord``
@@ -512,6 +558,8 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      *  :arg feature: ``OpenLayers.Feature.Vector``
      */
     select: function(feature) {
+        var featureManager=this.target.tools[this.featureManager];
+        console.log(featureManager);
         this.selectControl.unselectAll(
             this.popup && this.popup.editing && {except: this.popup.feature});
         this.selectControl.select(feature);

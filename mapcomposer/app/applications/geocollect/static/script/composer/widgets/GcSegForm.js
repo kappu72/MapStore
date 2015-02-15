@@ -568,7 +568,6 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
         });
     },
     destroy:function(){
-      console.log("distruggo");  
         this.b.destroy();
         
     }
