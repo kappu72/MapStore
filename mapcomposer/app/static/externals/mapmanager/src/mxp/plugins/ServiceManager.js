@@ -47,7 +47,8 @@ mxp.plugins.ServiceManager = Ext.extend(mxp.plugins.Tool, {
     addActions: function() {
         
         var thisButton = new Ext.Button({
-            // iconCls:'template_manger_ic', // TODO: icon
+            iconCls:'service-manager-icon', 
+
             text: this.buttonText,
             tooltip: this.tooltipText,
             handler: function() { 

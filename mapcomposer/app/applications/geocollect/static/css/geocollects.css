@@ -42,3 +42,7 @@
     height: 16px;
     width: 16px;
 }
+.service-manager-icon
+{
+    background-image: url(/images/camera.png);
+}
