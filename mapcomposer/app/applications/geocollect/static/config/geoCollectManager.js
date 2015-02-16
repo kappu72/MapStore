@@ -83,38 +83,13 @@
           "index": 2
         }
     },{ 
-        "ptype": "mxp_geostore_resource_editor",
-        "category": "GEOCOLLECT",
-        "buttonText": "Mission Templates",
-        "actionTarget":{
-             "target": "north.tbar",
-             "index": 3
-            }
-
-    },{ 
-        "ptype": "mxp_geostore_resource_editor",
-        "category": "MAP",
-        "buttonText": "Maps",
-        "actionTarget":{
-             "target": "north.tbar",
-             "index": 5
-            },
-		"attributeFields":[{
-			"xtype":"textfield",
-			"id":"attribute.owner",
-			"anchor":'95%',
-			"fieldLabel": "Owner",
-			"name":"attribute.owner"
-		}]
-
-    },{ 
         "ptype": "mxp_geostore_mission_resource_editor",
         "category": "GEOCOLLECT",
          "loginManager": "loginTool",
         "buttonText": "Mission Configuration",
              "actionTarget":{
              "target": "north.tbar",
-         "index": 6
+         "index": 3
             },
            "resourceEditor":{
 			"xtype":"mxp_gc_resource_editor",
