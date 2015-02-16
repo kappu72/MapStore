@@ -89,7 +89,7 @@
         "buttonText": "Mission Configuration",
              "actionTarget":{
              "target": "north.tbar",
-         "index": 3
+         "index": 4
             },
            "resourceEditor":{
 			"xtype":"mxp_gc_resource_editor",
@@ -102,7 +102,7 @@
         "notDuplicateOutputs":true,
         "actionTarget":{
              "target": "north.tbar",
-             "index": 4
+             "index": 5
             }
 
     },{
@@ -152,4 +152,5 @@
         "appDownloadUrl":"http://demo.geo-solutions.it/share/mapstoremobile/MapStoreMobile.apk"
 
 	}
+	
 }
