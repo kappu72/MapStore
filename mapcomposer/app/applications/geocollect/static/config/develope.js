@@ -192,6 +192,7 @@
           "id": "featuremanager",
           "autoLoadFeatures":true,
           "pagingType":1,
+          "numberOfFeatures":100,
             "maxFeatures":30,
              "autoSetLayer":false,
          "format":"JSON",
@@ -272,7 +273,19 @@
             "gcseg":"gcseggrid", 
             "toggleGroup": "toolGroup",
             "showSelectedOnly":false,
-            "actionTarget": {"target":"grissegnalazioni.tbar", "index": 0}
+            "actionTarget": {"target":"grissegnalazioni.tbar", "index": 0},
+            "editorConfig":{"status":{
+                            
+                                "xtype": "combo",
+                                "store": ["Annullato","Aperto","Sopralluogo","Intervento","Chiusura","Chiuso","Sopralluogo assegnato","Sopralluogo preso in carico","Sopralluogo eseguito",
+                                           "Interventi assegnati","Interventi presi in carico","Interventi eseguiti","Chiusura assegnata","Chiusura presa in carico","Chiusura eseguita",
+                                           "Interruzione servizio da ripristinare","Sopralluogo eseguito con sospensione"],
+                                "queryMode": "local",
+                                "typeAhead": true,
+                                "triggerAction": "all",
+                                "allowBlank":false
+                },"CODICE":{"allowBlank":false},"GRAVITA":{"allowBlank":false},"RISCHIO":{"allowBlank":false}
+                    }
         },
         {
           "ptype": "gxp_spatialqueryform",

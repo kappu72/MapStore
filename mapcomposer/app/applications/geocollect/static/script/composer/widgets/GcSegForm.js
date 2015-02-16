@@ -284,10 +284,17 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
                             break;
                     }
                 }
+                
+                 if (this.editorConfig && this.editorConfig[name]) {
+                     
+                    Ext.apply(fieldCfg, this.editorConfig[name]);
+                }
+                
                 customEditors[name] = new Ext.grid.GridEditor({
                     field: Ext.create(fieldCfg),
                     listeners: listeners
                 });
+               
                 attributes[name] = value;
             }, this);
             feature.attributes = attributes;
@@ -484,14 +491,19 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
      */
     stopEditing: function(save) {
         if(this.editing) {
+             
+            if(save === true&& this.feature.state===this.getDirtyState())
+            if(!this.validateSeg())return;
             //TODO remove the line below when
             // http://trac.openlayers.org/ticket/2210 is fixed.
             this.modifyControl.deactivate();
             this.modifyControl.destroy();
             
-            var feature = this.feature;
+           var feature = this.feature;
             if (feature.state === this.getDirtyState()) {
                 if (save === true) {
+                   
+              
                     //TODO When http://trac.osgeo.org/openlayers/ticket/3131
                     // is resolved, remove the if clause below
                     if (this.schema) {
@@ -526,15 +538,14 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
                 }
             }
 
-            if (!this.isDestroyed) {
                 this.cancelButton.hide();
                 this.saveButton.hide();
                 this.editButton.show();
                 this.allowDelete && this.deleteButton.show();
-            }
+           
             
             this.editing = false;
-            this.fireEvent( "stopsegediting",this);
+           this.fireEvent( "stopsegediting",this);
         }
     },
     
@@ -570,6 +581,31 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
     destroy:function(){
         this.b.destroy();
         
+    },
+    validateSeg:function(){
+        
+         
+             var editors=this.grid.customEditors;
+             var  attributes=this.feature.attributes;
+             for(var index in attributes) { 
+                if (attributes.hasOwnProperty(index)) {
+                 var val=attributes[index];
+                 var editor=editors[index];
+                     if(editor){
+                         var field = editors[index].field;
+                            field.setValue(val);
+                    if(!field.validate()){
+                        Ext.MessageBox.show({
+                                        msg: index+": "+field.getActiveError(),
+                                         buttons: Ext.Msg.OK,
+                                         animEl: 'elId',
+                                        icon: Ext.MessageBox.INFO
+                                     }); 
+                                     return false;
+                        }
+                    }
+                }
+        }return true;        
     }
 });
 

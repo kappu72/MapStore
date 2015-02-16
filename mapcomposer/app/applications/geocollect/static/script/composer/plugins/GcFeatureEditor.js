@@ -210,34 +210,28 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
             "beforeclearfeatures": intercept.createDelegate(this, "clearFeatures", 1),
             scope: this
         });
-        featureManager.on(
-            "beforequery", function(){
-                
+        featureManager.on({
+            "beforequery": function(){  
                 if(gcseg.segEditing){
-                    
+                     this.stopQueryMsg();
+                    return false;}
+            },    
+            "beforesetpage": function(){
+                if(gcseg.segEditing){
+                     this.stopQueryMsg();
+                    return false;}
+            },
+            "beforeclearfeatures": function(){
+                if(gcseg.segEditing){
                      this.stopQueryMsg();
                     return false;}
                 
-            },this);
-
-                featureManager.on(
-            "beforesetpage", function(){
-                if(gcseg.segEditing){
-                    
-                     this.stopQueryMsg();
-                    return false;}
-                
-            },this);
-
-          featureManager.on(
-            "beforeclearfeatures", function(){
-                if(gcseg.segEditing){
-                    
-                     this.stopQueryMsg();
-                    return false;}
-                
-            },this);
-            
+            },"clearfeatures": function(){
+               //Ricarica inizio!!
+                   featureManager.loadFeatures();            
+            }
+            ,scope:this});
+           
             
             
         this.drawControl = new OpenLayers.Control.DrawFeature(
@@ -340,7 +334,11 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                 {
                     
                     //Genero sempre la scheda per editing anche se non la uso!!:-D
-                        segForm= new gxp.plugins.GcSegForm(  {
+                       
+                        var ftGrid=gcseg.segdet.seg.items.get(0);//recupero quella presente se c'è
+                       
+                        segForm= new gxp.plugins.GcSegForm(Ext.apply(  
+                            {
                         feature:feature,
                         schema:featureManager.schema,
                         allowDelete: true,  
@@ -360,8 +358,8 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                 gcseg.segEditing=false;
                                 gcseg.segGrid.getSelectionModel().unlock();
                                 this.target.mapPanelContainer.getTopToolbar().enable();
-                                var r = gcseg.segGrid.getSelectionModel().getSelected();
-                                if(r)this.selectControl.select(r.data.feature);
+                               // var r = gcseg.segGrid.getSelectionModel().getSelected();//
+                                //if(r)this.selectControl.select(r.data.feature);
                                 this.actions[0].items[0].enable();
                                 this.actions[1].items[0].enable();
                                 
@@ -372,8 +370,7 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                         fn: function(st,act) {
                                          
                                         if(act=='update')gcseg.segdet.seg_history.refreshHistory();
-        
-                                        },
+                                                                               },
                                         single: true
                                     },
                                     scope: this
@@ -408,7 +405,7 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                             },
                             scope: this
                         }                    
-                    });
+                    }, {'editorConfig':this.initialConfig.editorConfig}));
                       gcseg.segdet.seg.insert(0,segForm);
                      
                     if(feature.state === OpenLayers.State.INSERT){
@@ -417,14 +414,14 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                         gcseg.segGrid.toggleInfo.toggle(true);
                     
                     }
-                    gcseg.segdet.doLayout();
                     
-                    if( ftGri=gcseg.segdet.seg.items.get(1)){
+                 //   console.log("prima di distruggere");
+                    if(ftGrid){
                         
-                         gcseg.segdet.seg.remove(ftGri,true);
+                         gcseg.segdet.seg.remove(ftGrid,true);
                          
                     }
-                    
+                    gcseg.segdet.doLayout();
                      //Elimino i bottoni finti iniziali :-D
                      gcseg.segGrid.fBtGroup.hide();
                      gcseg.segGrid.getTopToolbar().add(segForm.b);
