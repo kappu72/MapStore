@@ -247,17 +247,19 @@
                 "typeName": "rilevamenti_effettuati",
                 "queriableAttribute" : "MY_ORIG_ID",
                     "colConfig":{
-                        "RIMOZIONE":{
-                        "header": "RIMOZIONE",
+                        "status":{
+                        "header": "STATUS",
                         "editor": { 
                             "xtype": "combo",
-                            "store": ["Si","No","Forse"],
+                            "store": ["Annullato","Aperto","Eseguito","Rifiutato","Validato","Chiuso"],
                             "queryMode": "local",
                             "typeAhead": true,
                             "triggerAction": "all"
                             }
                         }
+                    
                     }  
+  
            },
           "ignoreFields":["DATA_RILEV","MACROAREA","MICROAREA","CIRCOSCRIZ","MORFOLOGIA","INCLINAZIO","MORFOLOGI1","COPERTURA_","COPERTURA1","USO_PARCHE","USO_COMMER","USO_STRADA","USO_ABBAND","PRESUNZION",
                             "AREA_PRIVA","AREA_PUBBL","ALTRE_CARA","DISTANZA_U","DIMENSIONI","RIFIUTI_NO","RIFIUTI_PE","QUANTITA_R","STATO_FISI","ODORE","MODALITA_S","PERCOLATO","VEGETAZION","STABILITA",
