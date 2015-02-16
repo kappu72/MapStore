@@ -169,7 +169,12 @@
         "topInUnits":"m",    
         "topOutUnits":"km"
     },
-    "customTools":[
+    "customTools":[{
+        
+        "ptype": "gxp_geostore_login"  ,
+       "actionTarget":null
+        
+    },
   
         {
             "ptype": "gxp_embedmapdialog",
@@ -216,7 +221,7 @@
           "ptype": "gxp_gcseggrid",
          "id":"gcseggrid",
           "featureManager": "featuremanager",
-           
+           "fKey":"GCID",
            "selectOnMap": false,
            "alwaysDisplayOnMap":false,
            "configHistory":{

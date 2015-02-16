@@ -267,6 +267,10 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
 	zoomToFeature: "Zoom To Feature",
     
+   
+   fKey:"",//chiave esterna per caricare tabelle history e sopralluoghi
+   
+   
     /** api: config[exportDoubleCheck]
      *  ``Boolean``
      *  Do check on feature grid export (one to show a possible error and another one to download the file)
@@ -361,6 +365,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             target: this.target,
             westVisible:false,
             layout:'border', 
+            fKey:this.fKey, 
            //   autoScroll: true,
             //align : "stretch",
             // pack  : 'start',
@@ -418,13 +423,16 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                }
                
                if(record){
-         
-            this.seg_history.loadHistory(record.data.GCID);
+                    console.log(this);
+                     console.log(this.fKey);
+                   
+            //TODO PASSARE DA configurazione il campo chiave esterna
+            this.seg_history.loadHistory(record.data[this.fKey]);
             // this.seg.setFeature(record.data.feature);
              //this.sop.loadSop(row.data.GCID);
-            if(record.data.feature.fid) 
-            this.sop.loadSop(record.data.feature.fid.split('.')[1]);
-            else this.sop.loadSop('');
+      
+            this.sop.loadSop(record.data[this.fKey]);
+            
             this.doLayout();
                 }
                
