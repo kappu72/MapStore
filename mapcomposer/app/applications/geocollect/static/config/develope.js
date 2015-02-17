@@ -200,10 +200,10 @@
           "numberOfFeatures":100,
             "maxFeatures":30,
              "autoSetLayer":false,
-         "format":"JSON",
+             "format":"JSON",
             "layer": {
-         "source":"geosolutions",
-         "name":"punti_abbandono"
+             "source":"geosolutions",
+             "name":"punti_abbandono"
             }, "symbolizer":  {
                         "Point": {
                             "pointRadius": 4,
@@ -258,8 +258,13 @@
                             }
                         }
                     
-                    }  
-  
+                    }  ,
+                "picturesBrowserConfig": {
+                "baseUrl": "http://geocollect.geo-solutions.it/opensdi2-manager/mvc/fileManager/extJSbrowser",
+                "folder": "/geocollect/media/punti_abbandono/",
+                "featureProperty": "MY_ORIG_ID",
+                "urlSuffix":"/2"
+            }
            },
           "ignoreFields":["DATA_RILEV","MACROAREA","MICROAREA","CIRCOSCRIZ","MORFOLOGIA","INCLINAZIO","MORFOLOGI1","COPERTURA_","COPERTURA1","USO_PARCHE","USO_COMMER","USO_STRADA","USO_ABBAND","PRESUNZION",
                             "AREA_PRIVA","AREA_PUBBL","ALTRE_CARA","DISTANZA_U","DIMENSIONI","RIFIUTI_NO","RIFIUTI_PE","QUANTITA_R","STATO_FISI","ODORE","MODALITA_S","PERCOLATO","VEGETAZION","STABILITA",

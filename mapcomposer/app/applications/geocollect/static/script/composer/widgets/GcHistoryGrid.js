@@ -160,12 +160,12 @@ gxp.grid.GcHistoryGrid = Ext.extend(Ext.grid.GridPanel, {
  getSchema: function(callback,scope){   
         var schema = new GeoExt.data.AttributeStore({
             url: this.wfsURL, 
-            baseParams: {
+            baseParams: Ext.apply({
                 SERVICE: "WFS",
                 VERSION: "1.1.0",
                 REQUEST: "DescribeFeatureType",
                 TYPENAME: this.typeName,
-            },
+            },this.baseParams||{}),
             autoLoad: true,
             listeners: {
                 "load": function() {
@@ -218,18 +218,15 @@ createStore:function(){
                 start: "startindex",
                 limit: "maxfeatures",
                 sort: "sortBy"
-                
             },
-            baseParams:{
+            baseParams:Ext.apply({
                 service:'WFS',
                 version:'1.1.0',
                 request:'GetFeature',
                 typeName:this.typeName ,
                 outputFormat: this.outputFormat,
                 sortBy: this.sortBy
-                
-            
-            },
+            },this.baseParams||{}),
             listeners:{
                 beforeload: function(store){
                     var mapPanel = (this.mapPanel?this.mapPanel:this.combo.target.mapPanel);

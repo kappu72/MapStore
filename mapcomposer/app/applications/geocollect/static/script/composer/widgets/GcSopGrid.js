@@ -81,13 +81,35 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     layer: null,
 	autoLoad:false,
 	actionTooltip: "Zoom To Feature",
+	baseParams:null,
     
     /** api: method[initComponent]
      *  Initializes the FeatureGrid.
      */
     initComponent: function(){
         
-        
+         this.addEvents(
+          
+            /** api: events[startsopediting]
+             *  Fires when the user press edit button
+             *  
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             */
+            "startsopediting",
+            
+             /** api: events[stopsopediting]
+             *  Fires when the user save or cancel editing
+             *  
+             *  Listener arguments:
+             *  * panel - :class:`gxp.FeatureEditPopup` This popup.
+             */
+
+
+            "stopsopediting",
+            
+            "sopselected"            
+        );
       
         
         
@@ -130,7 +152,7 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
                                 this.selectedRecord=r;
                              
 
-
+                            this.fireEvent('sopselected',r);
                                 
                 },
                 'rowdeselect': function(sm ){
@@ -212,12 +234,12 @@ gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
     getSchema: function(callback,scope){
         var schema = new GeoExt.data.AttributeStore({
             url: this.wfsURL, 
-            baseParams: {
+            baseParams: Ext.apply({
                 SERVICE: "WFS",
                 VERSION: "1.1.0",
                 REQUEST: "DescribeFeatureType",
                 TYPENAME: this.typeName,
-            },
+            },this.baseParams || {}),
             autoLoad: true,
             listeners: {
                 "load": function() {
@@ -306,13 +328,13 @@ createStore: function(schema) {
                         }
                     }, this);
                    
-                    var protocolOptions = {    
+                    var protocolOptions = Ext.apply({    
                         srsName: this.target.mapPanel.map.getProjection(),
                         url: schema.url,
                         featureType: schema.reader.raw.featureTypes[0].typeName,
                         featureNS: schema.reader.raw.targetNamespace,
                         geometryName: geometryName
-                    };
+                    },this.baseParams||{});
                     
                    
                     this.hitCountProtocol = new OpenLayers.Protocol.WFS(Ext.apply({
@@ -329,6 +351,7 @@ createStore: function(schema) {
                                 outputFormat: this.format 
                             }
                         },
+                        baseParams:this.baseParams,
                         maxFeatures: this.maxFeatures,
                         layer: this.featureLayer,
                         ogcFilter: this.filter,
@@ -460,7 +483,7 @@ createStore: function(schema) {
             this.deleteButton.hide();
             this.saveButton.show();
             this.cancelButton.show();     
-       
+            this.fireEvent( "startsopediting",this);
     },
      disableEditing: function() {
             
@@ -470,7 +493,7 @@ createStore: function(schema) {
             this.deleteButton.show();
             this.saveButton.hide();
             this.cancelButton.hide();
-                                  
+              this.fireEvent( "stopsopediting",this);                   
        
     },
      /** private: method[stopEditing]
@@ -479,7 +502,7 @@ createStore: function(schema) {
      */
     finishEditing: function(save) {
       
-            console.log(this.selectedRecord);
+           
             var feature = this.feature;
             
             if ( this.selectedRecord.dirty) {

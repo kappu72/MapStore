@@ -316,15 +316,15 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     init:function(targt)
     {
         gxp.plugins.FeatureManager.superclass.init.apply(this, arguments);        
-        console.log("init");
+      
+      this.authParam="authkey";
         // /////////////////////////////////////////////////////
         // Get the user's corrensponding authkey if present 
         // (see MSMLogin.getLoginInformation for more details)
         // /////////////////////////////////////////////////////
-        if(this.authParam && this.target.userDetails){
-            var userInfo = this.target.userDetails;
+        if(this.authParam && sessionStorage.userDetails){
+            var userInfo = Ext.decode(sessionStorage.userDetails);
             var authkey;
-            
             if(userInfo.user.attribute instanceof Array){
                 for(var i = 0 ; i < userInfo.user.attribute.length ; i++ ){
                     if( userInfo.user.attribute[i].name == "UUID" ){
@@ -336,14 +336,69 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                    authkey = userInfo.user.attribute.value;
                 }
             }
-
             if(authkey){
                 this.authkey=authkey;
+                
             }
         }
-
+   
+   
         
+    },
+    
+    createPhotoBrowser:function(){
+        
+          var photoBrowser= new Ext.DataView({
+                         itemSelector: 'div.thumb-wrap',
+                         style:'overflow:auto',
+                         ref:'picview',
+                         multiSelect: true,
+                        title:'Pictures',
+                        ref:'../../../phBrowser',
+                        picturesBrowserConfig:this.configSurvey.picturesBrowserConfig,
+                     store: new Ext.data.JsonStore({
+                                url: "http://geosolution.it",
+                    autoLoad: false,
+                    root: 'data',
+                    id:'name',
+                    fields:[
+                        'name', 'web_path','mtime','size',
+                        {name: 'shortName', mapping: 'name'}
+                    ],
+                    listeners:{
+                        load:function (store,records,req){
+                            if(records.length <= 0 ){
+                              if(photoBrowser.ownerCt.isVisible()) photoBrowser.ownerCt.ownerCt.layout.setActiveItem(0);
+                               photoBrowser.ownerCt.disable();
+                            }else photoBrowser.ownerCt.enable();
+                        }
+                    }
+                }),
+                         loadPhotos:function(r){
+                         var ds=this.getStore();
+                         var url=this.picturesBrowserConfig.baseUrl
+                         +'?action=get_filelist&folder='
+                         +this.picturesBrowserConfig.folder
+                         +r.data[this.picturesBrowserConfig.featureProperty]+this.picturesBrowserConfig.urlSuffix;
+                        ds.proxy.setUrl(url,true);
+                        ds.load();
+                },
 
+                tpl: new Ext.XTemplate(
+                    '<tpl for=".">',
+                    '<div class="thumb-wrap" id="{name}">',
+                    '<div class="thumb"><img height="100px" width="100px" src="'+this.configSurvey.picturesBrowserConfig.baseUrl+'?action=get_image&file={web_path}" class="thumb-img"></div>',
+                    '<span></span></div>',
+                    '</tpl>'
+                ),
+                listeners:{
+                    dblclick:function (scope, index, node, e){
+                        window.open(node.getElementsByTagName("img")[0].src);
+                    }
+                }
+            });
+
+            return photoBrowser;        
         
     },
     
@@ -354,11 +409,14 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
         var map = this.target.mapPanel.map, smCfg;
         var mapPanelContainer= this.target.mapPanelContainer;
         var target=this.target;
-        
-        console.log(this);
-       
-        
+        var bParams={};
+        if(this.authkey)bParams[this.authParam] = this.authkey;
         //Creo il pannello che carica i dettagli segnalazione!!
+        if(this.configSurvey.picturesBrowserConfig){
+            var photoBrowser=this.createPhotoBrowser();
+        }
+        
+        
          this.segdet=
         new Ext.Panel({
             title:this.noticeDetailsPanelTitle,
@@ -384,17 +442,36 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             
                 height:500,
                 items:[Ext.apply({
-                    xtype:"gxp_gchistroygrid",
-                    ref:'../seg_history',
-                    mapPanel:this.target.mapPanel,
+                        xtype:"gxp_gchistroygrid",
+                        ref:'../seg_history',
+                        mapPanel:this.target.mapPanel,
+                         baseParams:bParams
                     },this.initialConfig.configHistory||{}),
-                    Ext.apply({
+                    {
+                     xtype:'panel',
+                     layout:'accordion',
+                     title:'Survays',
+                    items: [Ext.apply({
                     xtype:"gxp_gcsopgrid",
                     target:this.target,
+                    baseParams:bParams,
                     wfsURL: "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
                     typeName: "rilevamenti_effettuati",
-                    ref:"../sop",
-                },this.initialConfig.configSurvey||{})  ]
+                    ref:"../../sop",
+                   /* listeners:{'sopselected':photoBrowser.loadPhotos,scope:photoBrowser
+                    }*/
+                     },this.initialConfig.configSurvey||{})
+                     ,
+                     
+                    {
+                         title:'Images',
+                         disabled:true,
+                         hidden:(!photoBrowser),
+                         items:[photoBrowser||{}],
+                     }] 
+                    }
+                
+                 ]
                 
             }
           
@@ -423,44 +500,26 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                }
                
                if(record){
-                    console.log(this);
-                     console.log(this.fKey);
-                   
-            //TODO PASSARE DA configurazione il campo chiave esterna
-            this.seg_history.loadHistory(record.data[this.fKey]);
-            // this.seg.setFeature(record.data.feature);
-             //this.sop.loadSop(row.data.GCID);
-      
-            this.sop.loadSop(record.data[this.fKey]);
-            
-            this.doLayout();
+                this.seg_history.loadHistory(record.data[this.fKey]);
+                this.sop.loadSop(record.data[this.fKey]);
+                if(this.phBrowser) this.phBrowser.loadPhotos(record);
+                this.doLayout();
                 }
                
             },
              hideMe:function(){
-              
-              
-                 
                   this.target.toolbar.show();
                 if(this.westVisible){
                     var west = Ext.getCmp('west');
-                    
                      west.expand();
                  }
-          
                 //Attivi mappa
                this.target.mapPanelContainer.layout.setActiveItem(0);
-              
-                
-                
             }
             
         });
-       
+       //Aggingo al panello mappa
             mapPanelContainer.add(this.segdet);
-        
-        
-
         
         // a minimal SelectFeature control - used just to provide select and
         // unselect, won't be added to the map unless selectOnMap is true
