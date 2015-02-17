@@ -192,16 +192,14 @@ this.items=[{
             })
 
 ];	
-	
-
-
 
 mxp.widgets.GcResourceEditor.superclass.initComponent.call(this, arguments);	
 },
 //Ritorna json completo da salvare montando i vari pezzi
 getResourceData: function(){
   	//Devo recuperare il titolo da fuori!!
-  	 var	parent =this.findParentByType('mxp_geostore_mission_resource_form');
+  	 var	parent =this.findParentByType('mxp_geostoreresourceform');
+  	 console.log(parent);
   		if(parent && parent.general  && parent.general.getForm()){
   					catField=parent.general.getForm().getFieldValues();
   					

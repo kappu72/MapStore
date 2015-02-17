@@ -108,7 +108,7 @@ loadXtype:function(o){
 getXtype:function(){
    
 var o   ={
-    	"type":null,
+    	"type":'text',
     	"value":this.valueField.getValue(),
     	"label":this.labField.getValue(),
     	 "xtype":"label"
@@ -125,8 +125,8 @@ var o   ={
  * */
 isValid:function(){
 	
-	a= (this.isFielIdActive())? this.idField.isValid():true;
-	b= (this.isSegActive())? this.valueField.isValid():true;
+	var a= (this.isFielIdActive())? this.idField.isValid():true;
+	var b= (this.isSegActive())? this.valueField.isValid():true;
 	if(this.labField.isValid() && b && a)return true;
 		return false;
 },
@@ -184,9 +184,13 @@ isSegActive:function(){
  * Return boolean
  */
 isDirty:function(){
-	a=Ext.encode(this.jObj);
-	b=Ext.encode(this.getXtype());
-	return (a==b)? false:true;		
+	
+	b=this.getXtype();
+for(var index in this.jObj) {
+    if(this.jObj[index]!==b[index])return true;
+}	
+	
+	return false;		
 	
 	
 }
