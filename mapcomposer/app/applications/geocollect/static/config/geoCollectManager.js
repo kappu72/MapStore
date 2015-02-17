@@ -86,7 +86,6 @@
         "ptype": "mxp_geostore_mission_resource_editor",
         "category": "GEOCOLLECT",
          "loginManager": "loginTool",
-        "buttonText": "Mission Configuration",
              "actionTarget":{
              "target": "north.tbar",
          "index": 4

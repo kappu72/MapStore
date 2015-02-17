@@ -36,7 +36,14 @@ mxp.widgets.GcResourceEditor = Ext.extend(Ext.Panel, {
 
     /** api: xtype = mxp_gc_resource_editor */
 	xtype:'mxp_gc_resource_editor',
-	
+	//Strings:
+	jsonPanel:'Advanced Configuration',
+	jsonToGuiBtnText:'JSON to GUI',
+	jsonToGuiBtnTooltip:'Load JSON to interface',
+	guiToJSONBtnText:'GUI to JSON',
+    guiToJSONBtnTooltip:'Generate JSON from interface',
+    checkMissionBtn:"Check mission",
+    checkMissionBtnTooltip:"Check mission validity",
 	layout:'accordion',
 	border:false,
 	resource:null, // la risorsa caricata
@@ -51,7 +58,7 @@ mxp.widgets.GcResourceEditor = Ext.extend(Ext.Panel, {
 	
 initComponent: function() {
 this.items=[{
-	xtype:'mxp_gc_db_resourcce_editor',
+	xtype:'mxp_gc_db_resource_editor',
 	ref:'dbEdit',
 	'authParam':this.authParam,
 	listeners:{
@@ -73,7 +80,7 @@ this.items=[{
 		},
 	 afterrender: function(me, eOpts){
                     me.header.on('mousedown',function(e){
-                    if(!me.collapsed)  me.stopCollapse=true;
+                    if(!me.collapsed)  me.stopCollapse=true;//Blocca chiusura panel alemeno non posso chiudere accordion e ne ho uno sempre aperto
                 });
                 },
                 beforecollapse: function(me, dir, an, opt){
@@ -86,7 +93,7 @@ this.items=[{
 	scope:this	
 	}
 },{
-	xtype:'mxp_gc_mobile_resourcce_editor',
+	xtype:'mxp_gc_mobile_resource_editor',
 	ref:'mobEdit',
 	listeners: {
                 afterrender: function(me, eOpts){
@@ -110,7 +117,8 @@ this.items=[{
                 frame:true,
                 layout:'fit',
                 xtype:'form',
-                title:'Advanced configuration',
+                title: this.jsonPanel,
+                iconCls:"gc_advanced_resource_edit",
                 border:false,
                 ref:'jsonP',
                 listeners: {
@@ -131,9 +139,9 @@ this.items=[{
                 },
                 tbar:[	{xtype:'toolbar',
 			 				items:[{
-		       					text:'GUI -> JSON',
-			                    tooltip: 'Generate from Interface',
-			                    iconCls: "accept",
+		       					text:this.guiToJSONBtnText,
+			                    tooltip: this.guiToJSONBtnTooltip,
+			                    iconCls: "gui_json",
 			                    style:{'text indent':0},
 			                    handler: function(btn){ 
 			                    //Se sono in editing il bottone è disabilitato|| 
@@ -143,9 +151,9 @@ this.items=[{
                                 scope:this
 			                    
 			                  		},'-',{
-		       					text:'JSON -> GUI',
-			                    tooltip: 'Load to Interface',
-			                    iconCls: "addgc",
+		       					text:this.jsonToGuiBtnText,
+			                    tooltip: this.jsonToGuiBtnTooltip,
+			                    iconCls: "json_gui",
 			                    handler: function(btn){ 
 			                    //Se sono in editing il bottone è disabilitato|| 
 			             	
@@ -153,9 +161,9 @@ this.items=[{
 			                    	 },scope:this
 			                    
 			                  		},'-',{
-			 					text:'Check Mission',
+			 					text:this.checkMissionBtn,
                					
-			                    tooltip: 'Check Page Validity',
+			                    tooltip: this.checkMissionBtnTooltip,
 			                    iconCls: "accept",
 			                    handler: function(btn){ 
 			                    	Ext.Msg.alert('Status', 'Page valid:'+this.canCommit()); 

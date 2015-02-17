@@ -285,9 +285,9 @@
             "editorConfig":{"status":{
                             
                                 "xtype": "combo",
-                                "store": ["Annullato","Aperto","Sopralluogo","Intervento","Chiusura","Chiuso","Sopralluogo assegnato","Sopralluogo preso in carico","Sopralluogo eseguito",
-                                           "Interventi assegnati","Interventi presi in carico","Interventi eseguiti","Chiusura assegnata","Chiusura presa in carico","Chiusura eseguita",
-                                           "Interruzione servizio da ripristinare","Sopralluogo eseguito con sospensione"],
+                                "store": [
+                                "Annullato","Aperto","Chiuso","Sopralluogo assegnato","Sopralluogo preso in carico","Sopralluogo eseguito"
+                                         ],
                                 "queryMode": "local",
                                 "typeAhead": true,
                                 "triggerAction": "all",

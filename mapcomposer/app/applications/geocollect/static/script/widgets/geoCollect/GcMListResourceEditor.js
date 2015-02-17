@@ -30,7 +30,7 @@ Ext.ns("mxp.widgets");
 mxp.widgets.GcMListResourceEditor = Ext.extend(Ext.Panel, {
 
     /** api: xtype = mxp_gc_db_resourcce_editor */
-	xtype:'mxp_gc_ml_resourcce_editor',
+	xtype:'mxp_gc_ml_resource_editor',
     
     store:null,
   	resource:null,

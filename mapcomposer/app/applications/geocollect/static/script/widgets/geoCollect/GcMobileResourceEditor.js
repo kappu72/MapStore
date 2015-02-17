@@ -35,14 +35,14 @@ Ext.ns("mxp.widgets");
 mxp.widgets.GcMobileResourceEditor = Ext.extend(Ext.Panel, {
 
     /** api: xtype = mxp_gc_mobile_resourcce_editor */
-	xtype:'mxp_gc_mobile_resourcce_editor',
-    
+	xtype:'mxp_gc_mobile_resource_editor',
+    title:'Mobile',
     
 initComponent: function() {
       
 //Setto le impostazioni di base del panel!!
-this.iconCls='resource_edit';
-this.title='Mobile';
+this.iconCls='gc-mobile-resource-edit';
+
 this.border= false;
 this.autoScroll=true;
 this.disabled=true;
@@ -72,7 +72,7 @@ this.items=[{
 	           }
                        
 	        }
-	        else  if(currentTab.isXType( 'mxp_gc_ml_resourcce_editor')&& !currentTab.canCommit() ){
+	        else  if(currentTab.isXType( 'mxp_gc_ml_resource_editor')&& !currentTab.canCommit() ){
 	               Ext.Msg.alert('Status', 'Page must be valid to continue '); 
 	               return false;
 
@@ -98,7 +98,7 @@ this.items=[{
 	
 		this.enable();	
 		
-		this.tabbi.add({xtype:'mxp_gc_ml_resourcce_editor',title:'Short Preview',store:dbp.getSeg_Store(),ref:'/mList'});
+		this.tabbi.add({xtype:'mxp_gc_ml_resource_editor',title:'Short Preview',store:dbp.getSeg_Store(),ref:'/mList'});
 		this.tabbi.add({xtype:'mxp_gc_pview_resourcce_editor',title:'Info',seg_store:dbp.getSeg_Store(),sop_store:dbp.getSop_Store(),ref:'/pView'});
 		this.tabbi.add({xtype:'mxp_gc_form_resourcce_editor',title:'Survey Form',seg_store:dbp.getSeg_Store(),sop_store:dbp.getSop_Store(),ref:'/pForm'});
 		this.tabbi.add({xtype:'mxp_gc_formseg_resourcce_editor',title:'Warning Form',seg_store:dbp.getSop_Store(),sop_store:dbp.getSeg_Store(),ref:'/pFormseg'});//GLi passo store invertiti!!
