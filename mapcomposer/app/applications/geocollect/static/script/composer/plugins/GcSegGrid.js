@@ -123,9 +123,9 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     comboFormatTpl: "<tpl for=\".\"><div class=\"x-combo-list-item gxp-icon-featuregrid-export {iconCls}\">{name}</div></tpl>",
     
-    editButtonText: 'Edit',
+    editButtonText: "Edit",
     
-    deleteButtonText: 'Delete',
+    deleteButtonText: "Delete",
     
      //Strings
    btnDetailsIconCls: "gc-icon-notice",
@@ -135,7 +135,8 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
    btnMapText:  "Map",
    btnMapTooltip: "Show map",
    noticeDetailsPanelTitle:"Notice Details",
-
+   photoBrowserPanelTitle:"Surveys Images",
+    surveysPanelTitle:"Surveys",
     /** api: config[displayFeatureText]
      * ``String``
      * Text for feature display button (i18n).
@@ -453,7 +454,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     {
                      xtype:'panel',
                      layout:'accordion',
-                     title:'Survays',
+                     title:this.surveysPanelTitle,
                     items: [Ext.apply({
                     xtype:"gxp_gcsopgrid",
                     target:this.target,
@@ -467,7 +468,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                      ,
                      
                     {
-                         title:'Images',
+                         title:this.photoBrowserPanelTitle,
                          disabled:true,
                          hidden:(!photoBrowser),
                          items:[photoBrowser||{}],

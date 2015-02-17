@@ -170,12 +170,7 @@
         "topInUnits":"m",    
         "topOutUnits":"km"
     },
-    "customTools":[{
-        
-        "ptype": "gxp_geostore_login"  ,
-       "actionTarget":null
-        
-    },
+    "customTools":[
   
         {
             "ptype": "gxp_embedmapdialog",
@@ -308,6 +303,12 @@
           "showSelectionSummary": true,
           "actions": null,
           "id": "bboxquery",
+          
+          "autoComplete": {
+            "sources": ["geosolutions"],
+            "url": "http://geocollect.geo-solutions.it/geoserver/ows",
+            "pageSize": 10
+          },
           "outputConfig":{
                   "outputSRS": "EPSG:900913",
                   "selectStyle":{
