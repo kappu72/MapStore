@@ -8,6 +8,7 @@
                 "title": "GeoSolutions GeoServer",
                 "SRS": "EPSG:900913",
                 "version":"1.1.1",
+                "authParam":"authkey",
                 "layersCachedExtent": [
                 -20037508.34,-20037508.34,
                 20037508.34,20037508.34

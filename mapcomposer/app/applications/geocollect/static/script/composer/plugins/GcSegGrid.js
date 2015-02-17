@@ -317,7 +317,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     {
         gxp.plugins.FeatureManager.superclass.init.apply(this, arguments);        
       
-      this.authParam="authkey";
+      this.authParam="authkey"; //TODO RIMUOVERE E METTERE IN CONFIGURAZIONE
         // /////////////////////////////////////////////////////
         // Get the user's corrensponding authkey if present 
         // (see MSMLogin.getLoginInformation for more details)
@@ -338,14 +338,14 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
             }
             if(authkey){
                 this.authkey=authkey;
-                
             }
         }
-   
-   
-        
     },
-    
+    /**
+     * private method[createPhotoBrowser]
+     * Create e DataView that loads surveys photos
+     * return Ext.DataView();
+     */
     createPhotoBrowser:function(){
         
           var photoBrowser= new Ext.DataView({
@@ -353,9 +353,11 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                          style:'overflow:auto',
                          ref:'picview',
                          multiSelect: true,
-                        title:'Pictures',
-                        ref:'../../../phBrowser',
-                        picturesBrowserConfig:this.configSurvey.picturesBrowserConfig,
+                         title:'Pictures',
+                         authParam:this.authParam,
+                         authKey:this.authkey,
+                         ref:'../../../phBrowser',
+                         picturesBrowserConfig:this.configSurvey.picturesBrowserConfig,
                      store: new Ext.data.JsonStore({
                                 url: "http://geosolution.it",
                     autoLoad: false,
@@ -380,6 +382,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                          +'?action=get_filelist&folder='
                          +this.picturesBrowserConfig.folder
                          +r.data[this.picturesBrowserConfig.featureProperty]+this.picturesBrowserConfig.urlSuffix;
+                         if(this.authKey)url+="&"+this.authParam+"="+this.authKey;
                         ds.proxy.setUrl(url,true);
                         ds.load();
                 },
