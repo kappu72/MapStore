@@ -135,8 +135,11 @@ setLabel:function(){
  * Return boolean
  */
 isDirty:function(){
+    
 	a=Ext.encode(this.jObj);
 	b=Ext.encode(this.getXtype());
+	console.log(a);
+console.log(b);
 	return (a==b)? false:true;		
 	
 	

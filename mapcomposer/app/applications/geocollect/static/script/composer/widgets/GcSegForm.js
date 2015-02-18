@@ -28,13 +28,13 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
     deleteMsgTitle: 'Delete Feature?',
     deleteMsg: 'Are you sure you want to delete this feature?',
     editButtonText: 'Edit',
-    editButtonTooltip: 'Make this feature editable',
+    editButtonTooltip: 'Make This Feature Editable',
     deleteButtonText: 'Delete',
-    deleteButtonTooltip: 'Delete this feature',
+    deleteButtonTooltip: 'Delete This Feature',
     cancelButtonText: 'Cancel',
-    cancelButtonTooltip: 'Stop editing, discard changes',
+    cancelButtonTooltip: 'Stop Editing, Discard Changes',
     saveButtonText: 'Save',
-    saveButtonTooltip: 'Save changes',
+    saveButtonTooltip: 'Save Changes',
     
     /** private config overrides **/
     layout: "fit",
@@ -352,6 +352,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
         this.grid = new Ext.grid.PropertyGrid({
             border: false,
           // header :false,
+            propertyNames :this.propertyNames ||{},
             source: feature.attributes,
             customEditors: customEditors,
             customRenderers: customRenderers,
@@ -370,6 +371,7 @@ gxp.plugins.GcSegForm = Ext.extend(Ext.Panel, {
                 "propertychange": function() {
                     this.setFeatureState(this.getDirtyState());
                 },
+                
                 scope: this
             },
             initComponent: function() {

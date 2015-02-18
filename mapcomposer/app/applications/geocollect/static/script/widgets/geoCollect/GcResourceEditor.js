@@ -38,12 +38,12 @@ mxp.widgets.GcResourceEditor = Ext.extend(Ext.Panel, {
 	xtype:'mxp_gc_resource_editor',
 	//Strings:
 	jsonPanel:'Advanced Configuration',
-	jsonToGuiBtnText:'JSON to GUI',
-	jsonToGuiBtnTooltip:'Load JSON to interface',
-	guiToJSONBtnText:'GUI to JSON',
-    guiToJSONBtnTooltip:'Generate JSON from interface',
-    checkMissionBtn:"Check mission",
-    checkMissionBtnTooltip:"Check mission validity",
+	jsonToGuiBtnText:'Apply',
+	jsonToGuiBtnTooltip:'Apply Configuration To User  Interface',
+	guiToJSONBtnText:'Get',
+    guiToJSONBtnTooltip:'Get Configuration  From User Interface',
+    checkMissionBtn:"Check Mission",
+    checkMissionBtnTooltip:"Check Configuration Validity",
 	layout:'accordion',
 	border:false,
 	resource:null, // la risorsa caricata
@@ -58,9 +58,10 @@ mxp.widgets.GcResourceEditor = Ext.extend(Ext.Panel, {
 	
 initComponent: function() {
 this.items=[{
-	xtype:'mxp_gc_db_resource_editor',
-	ref:'dbEdit',
-	'authParam':this.authParam,
+	xtype:"mxp_gc_db_resource_editor",
+	ref:"dbEdit",
+	authParam:this.authParam,
+	gcSource:this.gcSource,
 	listeners:{
 		ready:function(dbp){	
 		this.mobEdit.setStore(dbp);	
@@ -71,7 +72,7 @@ this.items=[{
 		},
 		resLoaded:function(){
 			//caricare le risorse in tutti i pannelli :-D
-			
+			console.log("resloaded");
 			//Va ritardato
 			task= new Ext.util.DelayedTask(function(){
     			 this.mobEdit.loadResourceData(this.resource);
@@ -108,8 +109,6 @@ this.items=[{
                         return false;
                     }
                 } 
-                
-                    
                 }
 	
 },//pannello con json modificabile a mano non so se 
@@ -156,7 +155,7 @@ this.items=[{
 			                    iconCls: "json_gui",
 			                    handler: function(btn){ 
 			                    //Se sono in editing il bottone è disabilitato|| 
-			             	
+			                   
 			                    			this.loadResourceData(this.jsonP.getResourceData());
 			                    	 },scope:this
 			                    
@@ -223,7 +222,7 @@ loadResourceData: function(resource){
                    		var pr=new  OpenLayers.Format.JSON();
     					res= pr.read(resource);
                    		this.resource=res;
-                   		this.jsonP.loadResourceData(resource);		
+                   	//	this.jsonP.loadResourceData(resource);		
                    		this.dbEdit.loadResourceData(this.resource.schema_seg);
                    //Carichi solo il db panle le altre vanno caricate dopo di lui
                 },

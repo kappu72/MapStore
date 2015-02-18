@@ -130,10 +130,10 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
      //Strings
    btnDetailsIconCls: "gc-icon-notice",
    btnDetailsText:  "Notice Details",
-   btnDetailsTooltip: "Show notice details",
+   btnDetailsTooltip: "Show Notice Details",
    btnMapIconCls: "gc-icon-map",
    btnMapText:  "Map",
-   btnMapTooltip: "Show map",
+   btnMapTooltip: "Show Map",
    noticeDetailsPanelTitle:"Notice Details",
    photoBrowserPanelTitle:"Surveys Images",
     surveysPanelTitle:"Surveys",
@@ -378,11 +378,12 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     }
                 }),
                          loadPhotos:function(r){
+                             console.log(r);
                          var ds=this.getStore();
                          var url=this.picturesBrowserConfig.baseUrl
                          +'?action=get_filelist&folder='
                          +this.picturesBrowserConfig.folder
-                         +r.data[this.picturesBrowserConfig.featureProperty]+this.picturesBrowserConfig.urlSuffix;
+                         +r.data[this.picturesBrowserConfig.featureProperty]+"/"+r.data.fid;
                          if(this.authKey)url+="&"+this.authParam+"="+this.authKey;
                         ds.proxy.setUrl(url,true);
                         ds.load();
@@ -462,8 +463,8 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     wfsURL: "http://84.33.2.28:8081/geoserver/it.geosolutions/ows",
                     typeName: "rilevamenti_effettuati",
                     ref:"../../sop",
-                   /* listeners:{'sopselected':photoBrowser.loadPhotos,scope:photoBrowser
-                    }*/
+                    listeners:{'sopselected':photoBrowser.loadPhotos,scope:photoBrowser
+                    }
                      },this.initialConfig.configSurvey||{})
                      ,
                      
@@ -506,7 +507,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                if(record){
                 this.seg_history.loadHistory(record.data[this.fKey]);
                 this.sop.loadSop(record.data[this.fKey]);
-                if(this.phBrowser) this.phBrowser.loadPhotos(record);
+            //    if(this.phBrowser) this.phBrowser.loadPhotos(record);
                 this.doLayout();
                 }
                

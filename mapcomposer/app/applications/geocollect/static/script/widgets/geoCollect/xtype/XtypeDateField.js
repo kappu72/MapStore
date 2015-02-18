@@ -161,10 +161,14 @@ setidField:function(){
  * Return boolean
  */
 isDirty:function(){
-	a=Ext.encode(this.jObj);
-	b=Ext.encode(this.getXtype());
-	return (a==b)? false:true;		
-	
+    console.log(this.jObj);
+	   b=this.getXtype();
+	   console.log(b);
+for(var index in this.jObj) {
+    if(this.jObj[index]!==b[index])return true;
+}   
+    
+    return false;   
 	
 }
 });

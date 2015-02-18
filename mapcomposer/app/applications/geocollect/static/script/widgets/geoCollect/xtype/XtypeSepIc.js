@@ -51,7 +51,7 @@ this.items=[ {	//contiene il valore del priority field
     		 ];
     
     
-this.on('render',this.setPfield,this)
+this.on('render',this.setPfield,this);
     
     
              mxp.widgets.XtypeSepIc.superclass.initComponent.call(this, arguments);
@@ -75,6 +75,7 @@ this.on('render',this.setPfield,this)
  * */
 loadXtype:function(o){
 	this.jObj=o;
+	console.log(o.label);
 	this.labField.setValue(o.label);
 	this.valueField.setValue(o.value);
 
@@ -96,7 +97,7 @@ loadXtype:function(o){
 getXtype:function(){
    
    o={
-    	"type":null,
+    	"type":"text",
     	"value":"${origin."+this.getPriorityField()+"}",
     	"label":this.labField.getValue(),
     	 "xtype":"separatorWithIcon"
@@ -160,10 +161,12 @@ getPriorityField:function(){
  * Return boolean
  */
 isDirty:function(){
-	a=Ext.encode(this.jObj);
-	b=Ext.encode(this.getXtype());
-	return (a==b)? false:true;		
-	
+	   b=this.getXtype();
+for(var index in this.jObj) {
+    if(this.jObj[index]!==b[index])return true;
+}   
+    
+    return false;   
 	
 }
 });

@@ -597,13 +597,13 @@ mxp.widgets.GcMobileWidgetPanel = Ext.extend(Ext.Panel, {
     loadXtype : function(o) {
         //setto
         //Se è uno nuvo creato lo imposto al primo!!
+        
         if (o._created == true) {
             o.xtype = this.xtypeSelector.store.getAt(0).get('value');
         };
         this.setComboVal(this.xtypeSelector, o.xtype, 'value');
 
-        if (this.xpanlForm)
-            this.xpanlForm.loadXtype(o);
+       
         //Setto anche nella lista dei campi se è un campo origine altrimenti lasci al panel
 
         if (o.value && o.value.search(this.clV) > -1)
@@ -612,6 +612,9 @@ mxp.widgets.GcMobileWidgetPanel = Ext.extend(Ext.Panel, {
             this.setComboVal(this.sopSelector, o.fieldId, 'name');
         if (o.type)
             this.setComboVal(this.xdatatypeSelector, o.type, 'value');
+            
+         if (this.xpanlForm)
+            this.xpanlForm.loadXtype(o);    
     },
     /**
      *

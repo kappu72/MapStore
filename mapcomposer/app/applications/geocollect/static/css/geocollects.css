@@ -7,10 +7,10 @@
     display: block;
 }
 .m_up {
-    background-image: url(../../../ext/ux/images/up2.gif) !important;
+    background-image: url(../images/arrow_up.png) !important;
 }
 .m_down {
-    background-image: url(../../../ext/ux/images/down2.gif) !important;
+    background-image: url(../images/arrow_down.png) !important;
 }
 /*GetFeatureInfo with Photos styles*/
 .thumb {

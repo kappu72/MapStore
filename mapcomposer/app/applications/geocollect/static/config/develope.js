@@ -293,7 +293,8 @@
                                 "triggerAction": "all",
                                 "allowBlank":false
                 },"CODICE":{"allowBlank":false},"GRAVITA":{"allowBlank":false},"RISCHIO":{"allowBlank":false}
-                    }
+                },
+                "propertyNames":{"status":"STATUS"}
         },
         {
           "ptype": "gxp_spatialqueryform",

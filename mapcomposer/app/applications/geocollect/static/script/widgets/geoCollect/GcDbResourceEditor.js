@@ -149,12 +149,9 @@ var baseParams = this.baseParams || {
 				baseParams[this.authParam] = authkey;
 			}
 		}
-	
-		
-		
         //Creo lo store per recuperare le sorgenti dati
         this.dbstore = new GeoExt.data.WMSCapabilitiesStore({
-            url: config.gcSource,//recupero url configurata in localconfig TODO:in fututo dovrà essere configurabile
+            url: this.gcSource,//recupero url configurata in localconfig TODO:in fututo dovrà essere configurabile
             baseParams: baseParams,        
             autoLoad: true,
          
@@ -541,18 +538,19 @@ this.autoScroll=true;
  	return recObj;
  	},
  	               
-                
-                //expect il suo pezzo gia in oggetto se arriva oggetto parsato è gia solo il suo blocco
     loadResourceData: function(resource){
     		
     			s_seg=resource;
     			
     			//Se esiste schema recupero ed inizializzo
     			//Non ho altro da fare perchè tutte le info le recupero dallo stor
-	    		if(s_seg && s_seg.typeName)	
+	    		if(s_seg && s_seg.typeName && this.typeName!=s_seg.typeName ){	
     					this.typeName=s_seg.typeName;
-    		this.setComboValue(this.typeName);
-             	this.isLoaded=true;
+    		            this.setComboValue(this.typeName);
+    		         }else if( this.typeName==s_seg.typeName)
+    		         this.fireEvent("resLoaded",this);
+    		         
+             	         this.isLoaded=true;
              	
              	//per ora disabilito
              			

@@ -341,7 +341,8 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                             {
                         feature:feature,
                         schema:featureManager.schema,
-                        allowDelete: true,  
+                        allowDelete: true, 
+                        propertyNames:this.propertyNames, 
                         listeners: {
                             "startsegediting": function() {
                                 gcseg.segEditing=true;

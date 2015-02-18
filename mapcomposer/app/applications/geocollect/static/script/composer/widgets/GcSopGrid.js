@@ -21,7 +21,7 @@ Ext.namespace("gxp.grid");
  */
 gxp.grid.GcSopGrid = Ext.extend(Ext.grid.EditorGridPanel, {
 
-    //title:'Surveys',
+    title:'Details',
     deleteMsgTitle:'Delete',
     deleteMsg:'Are you sure you want do delete this row',
     deleteButtonText:'Delete',

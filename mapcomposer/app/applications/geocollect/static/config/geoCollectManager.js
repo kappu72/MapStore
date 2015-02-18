@@ -93,12 +93,12 @@
            "resourceEditor":{
 			"xtype":"mxp_gc_resource_editor",
 			"ref":"/missionResEdit",
+			"gcSource":"http://geocollect.geo-solutions.it/geoserver/it.geosolutions/ows",
 			"authParam":"authkey"
 		},
     },{ 
         "ptype": "mxp_servicemanager",
-	"buttonText": "Photos",
-        "notDuplicateOutputs":true,
+	   "buttonText": "Photos",
         "actionTarget":{
              "target": "north.tbar",
              "index": 5
