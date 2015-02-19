@@ -107,11 +107,11 @@ loadXtype:function(o){
  * */
 getXtype:function(){
    
-var o   ={
-    	"type":'text',
+var o ={
+    	"type":"text",
     	"value":this.valueField.getValue(),
     	"label":this.labField.getValue(),
-    	 "xtype":"label"
+    	"xtype":"label"
    };
    if(this.isFielIdActive())o.fieldId=this.idField.getValue();
 
@@ -156,7 +156,7 @@ setField:function(){
 	 if(this.isSegActive())
 	 	{var parent= this.findParentByType('mxp_gc_mobile_widget_panel');
 	    val = parent.fieldSelector.getValue();
-	    this.valueField.setValue('${origin.'+val+'}');}
+	    this.valueField.setValue("${origin."+val+"}");}
 	    
 },
 //Recupera il valore dal widget fields e lo setta!!
@@ -184,13 +184,9 @@ isSegActive:function(){
  * Return boolean
  */
 isDirty:function(){
-	
-	b=this.getXtype();
-for(var index in this.jObj) {
-    if(this.jObj[index]!==b[index])return true;
-}	
-	
-	return false;		
+    a=Ext.encode(this.jObj);
+    b=Ext.encode(this.getXtype());
+    return (a==b)? false:true;  	
 	
 	
 }

@@ -39,7 +39,7 @@ this.items=[
    				xtype:'textfield', 
 				fieldLabel:'Label',
 				ref:'labField',
-				allowBlank:false,
+				allowBlank:true,
 		    }
     		 ];
     
@@ -63,7 +63,7 @@ this.items=[
  * */
 loadXtype:function(o){
 	this.jObj=o;
-	this.labField.setValue(o.text);
+	this.labField.setValue(o.label);
 	
 },
 
@@ -83,8 +83,8 @@ loadXtype:function(o){
 getXtype:function(){
    
    o={
-    	"type":null,
-    	"text":this.labField.getValue(),
+    	
+    	"label":this.labField.getValue(),
     	"xtype":"photo"
    };
 	return o;
@@ -97,8 +97,9 @@ getXtype:function(){
  * */
 isValid:function(){
 	
-	if(this.labField.isValid())return true;
-		return false;
+	//if(this.labField.isValid())return true;
+		//return false;
+		return true;
 },
 
 /**
@@ -130,8 +131,6 @@ isDirty:function(){
 	a=Ext.encode(this.jObj);
 	b=Ext.encode(this.getXtype());
 	return (a==b)? false:true;		
-	
-	
 }
 });
 

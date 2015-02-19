@@ -257,7 +257,7 @@
                     }  ,
                 "picturesBrowserConfig": {
                 "baseUrl": "http://geocollect.geo-solutions.it/opensdi2-manager/mvc/fileManager/extJSbrowser",
-                "folder": "/geocollect/media/punti_abbandono/",
+                "folder": "/media/punti_abbandono/",
                 "featureProperty": "MY_ORIG_ID",
                 "urlSuffix":"/2"
             }

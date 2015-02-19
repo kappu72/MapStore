@@ -51,7 +51,7 @@ this.items=[{
     		 ];
     
     
-this.on('render',this.setfieldId,this)
+this.on('render',this.setfieldId,this);
     
     
              mxp.widgets.XtypeCheckBox.superclass.initComponent.call(this, arguments);
@@ -95,8 +95,8 @@ loadXtype:function(o){
 getXtype:function(){
    
   o={
-    	"type":null,
-    	"value":this.idField.getValue(),
+    	"type":"text",
+    	"fieldId":this.idField.getValue(),
     	"label":this.labField.getValue(),
     	 "xtype":"checkbox"
    };
@@ -148,6 +148,8 @@ setfieldId:function(){
 isDirty:function(){
 	a=Ext.encode(this.jObj);
 	b=Ext.encode(this.getXtype());
+	console.log(a);
+	console.log(b);
 	return (a==b)? false:true;		
 	
 	

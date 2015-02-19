@@ -91,7 +91,7 @@ this.items=[ {
 				listeners:{
 					check:function( o, checked ){
 						if(checked)this.centerMsg.enable();
-						else 	this.centerMsg.disable()					
+						else 	this.centerMsg.disable();					
 					},scope:this
 				}
 				
@@ -118,7 +118,7 @@ this.items=[ {
 				listeners:{
 					check:function( o, checked ){
 						if(checked)this.localizeMsg.enable();
-						else 	this.localizeMsg.disable()					
+						else 	this.localizeMsg.disable();					
 					},scope:this
 				}
 				
@@ -190,8 +190,8 @@ loadXtype:function(o){
 	this.jObj=o;
 	if(o.attributes){	
 		if(o.attributes.editable) this.editCk.setValue(o.attributes.editable);
-		if(o.attributes.disablePan) this.panCk.setValue(o.attributes.disablePan);
-		if(o.attributes.disableZoom) this.zoomCk.setValue(o.attributes.disableZoom);
+		if(o.attributes.disablePan) this.panCk.setValue(!o.attributes.disablePan);
+		if(o.attributes.disableZoom) this.zoomCk.setValue(!o.attributes.disableZoom);
 		if(o.attributes.displayOriginalValue) this.origValCk.setValue(o.attributes.displayOriginalValue);
 		if(o.attributes.description)this.descriptionField.setValue(o.attributes.description);
 		if(o.attributes.height)this.heigthFild.setValue(o.attributes.height);
@@ -202,7 +202,7 @@ loadXtype:function(o){
 			}
 		if(o.center){
 			this.centerCk.setValue(o.center);
-			this.centerMsg.setValue(o.centerMsg)
+			this.centerMsg.setValue(o.centerMsg);
 			}			
 	}
 
@@ -229,21 +229,23 @@ getXtype:function(){
    
    var attributes={
    	'editable':this.editCk.getValue(),
-   	'disablePan':this.panCk.getValue(),
-   	'disableZoom':this.zoomCk.getValue(),
+   	'disablePan':!this.panCk.getValue(),
+   	'disableZoom':!this.zoomCk.getValue(),
    	'displayOriginalValue':this.origValCk.getValue(),
-   	'height':this.heigthFild.getValue(),
-   	'zoom':this.zoomLev.getValue()
+   	'height':this.heigthFild.getValue()
+   	
    };
+    if(this.zoomCk.getValue())attribute.zoom=this.zoomLev.getValue();
     if(this.descriptionField.getValue()) attributes.description=this.descriptionField.getValue();
    
    geom= this.getGeometryFields();
    var o={
     	"type":'geoPoint',
-    	"value":(this.isSegActive())? "${origin."+geom.value+"}":'',
-    	"fieldId":geom.fieldId,
+//    	"value":(this.isSegActive())? "${origin."+geom.value+"}":"",
+        "value":(this.isSegActive())? "${origin.the_geom}":"",
     	"xtype":"mapViewPoint",
-    	"attributes":attributes,
+    	"fieldId":geom.fieldId,
+    	"attributes":attributes
       	
    };
   if(this.localizeCk.getValue()){
@@ -301,9 +303,9 @@ getGeometryFields:function(){
 	fieldId=	 parent.sopSelector.getValue();
 	
 	return  {
-		'value':value,
-		'fieldId':fieldId
-		}
+		"value":value,
+		"fieldId":fieldId
+		};
 	
 },
 isSegActive:function(){

@@ -146,7 +146,7 @@ setPfield:function(){
 setLabel:function(){
 	 var	parent= this.findParentByType('mxp_gc_mobile_widget_panel');
 	    val = parent.fieldSelector.getValue();
-	    this.labField.setValue('${'+val+'}');
+	    this.labField.setValue('${origin.'+val+'}');
 },
 
 
@@ -161,12 +161,9 @@ getPriorityField:function(){
  * Return boolean
  */
 isDirty:function(){
-	   b=this.getXtype();
-for(var index in this.jObj) {
-    if(this.jObj[index]!==b[index])return true;
-}   
-    
-    return false;   
+    a=Ext.encode(this.jObj);
+    b=Ext.encode(this.getXtype());
+    return (a==b)? false:true;      
 	
 }
 });

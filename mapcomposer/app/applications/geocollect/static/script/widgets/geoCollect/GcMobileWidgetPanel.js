@@ -682,7 +682,7 @@ mxp.widgets.GcMobileWidgetPanel = Ext.extend(Ext.Panel, {
     setComboVal : function(selector, val, sfield) {
 
         var store = selector.getStore();
-        idx = store.find(sfield, val);
+        idx = store.find(sfield, new RegExp('^' + val + '$'));
         if (idx > -1) {//SE TROVO PER TYPENAME ALLORA SETTO
             rec = store.getAt(idx);
             selector.setValue(rec.get(sfield));

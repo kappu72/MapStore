@@ -71,8 +71,8 @@ this.items=[{
 		     ];
     
     
-this.on('render',this.setidField,this)
-this.on('render',this.setMandatory,this)
+this.on('render',this.setidField,this);
+this.on('render',this.setMandatory,this);
     
              mxp.widgets.XtypeTextField.superclass.initComponent.call(this, arguments);
 	
@@ -125,7 +125,7 @@ getXtype:function(){
     	"type":this.getType(),
     	"label":this.labField.getValue(),
     	"xtype":"textfield",
-    	"mandatory":this.mandCk.getValue()
+    	"mandatory":(this.mandCk.getValue())?"true":"false"
    };
    var opt=this.optField.getOptions();
   if(opt.length)o.options=opt;
@@ -208,10 +208,9 @@ getType:function(){
  * Return boolean
  */
 isDirty:function(){
-	a=Ext.encode(this.jObj);
-	b=Ext.encode(this.getXtype());
-	return (a==b)? false:true;		
-	
+    a=Ext.encode(this.jObj);
+    b=Ext.encode(this.getXtype());
+    return (a==b)? false:true;      		
 	
 }
 });

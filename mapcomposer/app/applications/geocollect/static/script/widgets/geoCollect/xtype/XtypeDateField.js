@@ -55,12 +55,13 @@ this.items=[{
    				xtype:'textfield', 
 				fieldLabel:'Date Format',
 				ref:'formatField',
-				allowBlank:false	
+				hidden:"true",
+				allowBlank:true	
 		     }
 		     ];
     
     
-this.on('render',this.setidField,this)
+this.on('render',this.setidField,this);
 
     
              mxp.widgets.XtypeDateField.superclass.initComponent.call(this, arguments);
@@ -107,12 +108,13 @@ loadXtype:function(o){
  */
 getXtype:function(){
    
-   o={
+   o={  
+        "type":"text",
    		"fieldId":this.idField.getValue(),
     	"label":this.labField.getValue(),
-    	"xtype":"datefield",
-    	"format":this.formatField.getValue()
+    	"xtype":"datefield"
    };
+   if(this.formatField.getValue())o.format=this.formatField.getValue();
   
 	return o;
 },
@@ -161,15 +163,9 @@ setidField:function(){
  * Return boolean
  */
 isDirty:function(){
-    console.log(this.jObj);
-	   b=this.getXtype();
-	   console.log(b);
-for(var index in this.jObj) {
-    if(this.jObj[index]!==b[index])return true;
-}   
-    
-    return false;   
-	
+    a=Ext.encode(this.jObj);
+    b=Ext.encode(this.getXtype());
+    return (a==b)? false:true;      
 }
 });
 

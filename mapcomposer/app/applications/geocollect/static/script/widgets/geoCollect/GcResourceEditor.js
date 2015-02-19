@@ -42,8 +42,8 @@ mxp.widgets.GcResourceEditor = Ext.extend(Ext.Panel, {
 	jsonToGuiBtnTooltip:'Apply Configuration To User  Interface',
 	guiToJSONBtnText:'Get',
     guiToJSONBtnTooltip:'Get Configuration  From User Interface',
-    checkMissionBtn:"Check Mission",
-    checkMissionBtnTooltip:"Check Configuration Validity",
+    checkMissionBtn:"Validate",
+    checkMissionBtnTooltip:"Validate Configuration",
 	layout:'accordion',
 	border:false,
 	resource:null, // la risorsa caricata
@@ -137,7 +137,19 @@ this.items=[{
                     
                 },
                 tbar:[	{xtype:'toolbar',
-			 				items:[{
+			 				items:[
+			 				{
+                                text:this.checkMissionBtn,
+                                
+                                tooltip: this.checkMissionBtnTooltip,
+                                iconCls: "accept",
+                                handler: function(btn){ 
+                                    Ext.Msg.alert('Status', 'Page valid:'+this.canCommit()); 
+                                                                
+                                },scope:this}, ]},'-',
+			 				
+			 				
+			 				{
 		       					text:this.guiToJSONBtnText,
 			                    tooltip: this.guiToJSONBtnTooltip,
 			                    iconCls: "gui_json",
@@ -159,15 +171,7 @@ this.items=[{
 			                    			this.loadResourceData(this.jsonP.getResourceData());
 			                    	 },scope:this
 			                    
-			                  		},'-',{
-			 					text:this.checkMissionBtn,
-               					
-			                    tooltip: this.checkMissionBtnTooltip,
-			                    iconCls: "accept",
-			                    handler: function(btn){ 
-			                    	Ext.Msg.alert('Status', 'Page valid:'+this.canCommit()); 
-			                    		                    	
-			                    },scope:this}, ]}],
+			                  		}],
                 items:[
                			
                 {

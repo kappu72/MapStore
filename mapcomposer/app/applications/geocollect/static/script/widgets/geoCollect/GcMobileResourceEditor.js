@@ -37,7 +37,10 @@ mxp.widgets.GcMobileResourceEditor = Ext.extend(Ext.Panel, {
     /** api: xtype = mxp_gc_mobile_resourcce_editor */
 	xtype:'mxp_gc_mobile_resource_editor',
     title:'Mobile',
-    
+    previewTabTitle:"Short Preview",
+    infoTabTitle:"Info",
+    surveyTabTitle:"Survey Form",
+    noticeTabTitle:"Notice Form",
 initComponent: function() {
       
 //Setto le impostazioni di base del panel!!
@@ -98,10 +101,10 @@ this.items=[{
 	
 		this.enable();	
 		
-		this.tabbi.add({xtype:'mxp_gc_ml_resource_editor',title:'Short Preview',store:dbp.getSeg_Store(),ref:'/mList'});
-		this.tabbi.add({xtype:'mxp_gc_pview_resourcce_editor',title:'Info',seg_store:dbp.getSeg_Store(),sop_store:dbp.getSop_Store(),ref:'/pView'});
-		this.tabbi.add({xtype:'mxp_gc_form_resourcce_editor',title:'Survey Form',seg_store:dbp.getSeg_Store(),sop_store:dbp.getSop_Store(),ref:'/pForm'});
-		this.tabbi.add({xtype:'mxp_gc_formseg_resourcce_editor',title:'Warning Form',seg_store:dbp.getSop_Store(),sop_store:dbp.getSeg_Store(),ref:'/pFormseg'});//GLi passo store invertiti!!
+		this.tabbi.add({xtype:'mxp_gc_ml_resource_editor',title:this.previewTabTitle,store:dbp.getSeg_Store(),ref:'/mList'});
+		this.tabbi.add({xtype:'mxp_gc_pview_resourcce_editor',title:this.infoTabTitle,seg_store:dbp.getSeg_Store(),sop_store:dbp.getSop_Store(),ref:'/pView'});
+		this.tabbi.add({xtype:'mxp_gc_form_resourcce_editor',title:this.surveyTabTitle,seg_store:dbp.getSeg_Store(),sop_store:dbp.getSop_Store(),ref:'/pForm'});
+		this.tabbi.add({xtype:'mxp_gc_formseg_resourcce_editor',title:this.noticeTabTitle,seg_store:dbp.getSop_Store(),sop_store:dbp.getSeg_Store(),ref:'/pFormseg'});//GLi passo store invertiti!!
 		this.tabbi.doLayout();
 		this.tabbi.setActiveTab(0);		
 },
