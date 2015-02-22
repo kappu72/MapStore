@@ -321,7 +321,6 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
              
                
                 if( segForm && segForm.editing) {
-                    console.log("mi pianto");
                     
                      //evt.cancelBubble=false;
                      return false;
@@ -416,7 +415,6 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                     
                     }
                     
-                 //   console.log("prima di distruggere");
                     if(ftGrid){
                         
                          gcseg.segdet.seg.remove(ftGrid,true);
@@ -557,7 +555,6 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
      */
     select: function(feature) {
         var featureManager=this.target.tools[this.featureManager];
-        console.log(featureManager);
         this.selectControl.unselectAll(
             this.popup && this.popup.editing && {except: this.popup.feature});
         this.selectControl.select(feature);

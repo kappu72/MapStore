@@ -317,7 +317,6 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     init:function(targt)
     {
         gxp.plugins.FeatureManager.superclass.init.apply(this, arguments);        
-      
       this.authParam="authkey"; //TODO RIMUOVERE E METTERE IN CONFIGURAZIONE
         // /////////////////////////////////////////////////////
         // Get the user's corrensponding authkey if present 
@@ -378,7 +377,6 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     }
                 }),
                          loadPhotos:function(r){
-                             console.log(r);
                          var ds=this.getStore();
                          var url=this.picturesBrowserConfig.baseUrl
                          +'?action=get_filelist&folder='

@@ -78,12 +78,21 @@
                 "source": "bing",
                 "title": "Bing Aerial",
                 "name": "Aerial",
-                "group": "background"
+                "group": "background",
+                "visibility": false,
+                "args": [
+                    "None", {"visibility": false}
+                ]
+                
             },{
                 "source": "bing",
                 "title": "Bing Aerial With Labels",
                 "name": "AerialWithLabels",
-                "group": "background"
+                "group": "background",
+                "visibility": false,
+                "args": [
+                    "None", {"visibility": false}
+                ]
             },{
                 "source": "ol",
                 "group": "background",

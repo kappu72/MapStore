@@ -75,7 +75,6 @@ this.on('render',this.setPfield,this);
  * */
 loadXtype:function(o){
 	this.jObj=o;
-	console.log(o.label);
 	this.labField.setValue(o.label);
 	this.valueField.setValue(o.value);
 

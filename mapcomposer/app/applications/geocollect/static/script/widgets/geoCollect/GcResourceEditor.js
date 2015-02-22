@@ -72,7 +72,6 @@ this.items=[{
 		},
 		resLoaded:function(){
 			//caricare le risorse in tutti i pannelli :-D
-			console.log("resloaded");
 			//Va ritardato
 			task= new Ext.util.DelayedTask(function(){
     			 this.mobEdit.loadResourceData(this.resource);
@@ -202,7 +201,6 @@ mxp.widgets.GcResourceEditor.superclass.initComponent.call(this, arguments);
 getResourceData: function(){
   	//Devo recuperare il titolo da fuori!!
   	 var	parent =this.findParentByType('mxp_geostoreresourceform');
-  	 console.log(parent);
   		if(parent && parent.general  && parent.general.getForm()){
   					catField=parent.general.getForm().getFieldValues();
   					

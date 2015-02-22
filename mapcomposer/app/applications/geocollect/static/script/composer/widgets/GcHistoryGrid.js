@@ -452,7 +452,6 @@ createRecordsModel: function() {
    },
     
  refreshHistory:function(){
-     console.log("Ricarico history");
      this.store.reload();
  }
  

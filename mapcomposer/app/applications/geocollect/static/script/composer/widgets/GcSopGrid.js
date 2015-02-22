@@ -359,7 +359,6 @@ createStore: function(schema) {
                         autoSave: false,
                         listeners: {
                             "write": function() {
-                                console.log('write');
                                // this.redrawMatchingLayers(record);
                             },
                             "load": function() {
@@ -610,7 +609,6 @@ createStore: function(schema) {
                     });
                        
                    }
-                    console.log(res);                    
                 },scope:this
         });
 
