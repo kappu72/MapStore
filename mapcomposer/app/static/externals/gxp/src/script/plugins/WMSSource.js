@@ -159,7 +159,6 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (this.version) {
             baseParams.VERSION = this.version;
         }
-        console.log(this.target);
          // /////////////////////////////////////////////////////
 	    // Get the user's corrensponding authkey if present 
 	    // (see MSMLogin.getLoginInformation for more details)

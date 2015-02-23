@@ -317,7 +317,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
     init:function(targt)
     {
         gxp.plugins.FeatureManager.superclass.init.apply(this, arguments);        
-      this.authParam="authkey"; //TODO RIMUOVERE E METTERE IN CONFIGURAZIONE
+      //TODO RIMUOVERE E METTERE IN CONFIGURAZIONE
         // /////////////////////////////////////////////////////
         // Get the user's corrensponding authkey if present 
         // (see MSMLogin.getLoginInformation for more details)
@@ -748,11 +748,12 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                 bbar.push(this.getExportButton("CSV"));
             }
         }
-
+       
         config = Ext.apply({
             xtype: "gxp_gcfeaturegrid",
             viewConfig: {forceFit: true},
             actionTooltip: null,
+            colConfig:this.colConfig,
             map: this.target.mapPanel.map,
             sm: new GeoExt.grid.FeatureSelectionModel(smCfg),
             autoScroll: true,

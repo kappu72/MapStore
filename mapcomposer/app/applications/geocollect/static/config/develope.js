@@ -227,8 +227,12 @@
          "id":"gcseggrid",
           "featureManager": "featuremanager",
            "fKey":"GCID",
+            "authParam":"authkey",
            "selectOnMap": false,
            "alwaysDisplayOnMap":false,
+           "colConfig":{
+                            "status":{"header": "STATUS"}
+                },
            "configHistory":{
                     "queriableAttribute" : "GCID" ,
                     "sortBy":"hist_date",

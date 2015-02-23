@@ -230,16 +230,17 @@ gxp.grid.GcFeatureGrid = Ext.extend(Ext.grid.GridPanel, {
                 name = f.name;
             }
             
-            if (this.ignoreFields.indexOf(name) === -1) {
-               
-                columns.push({
+            var col=Ext.apply({
                     dataIndex: name,
                     header: name,
                     sortable: true,
                     xtype: xtype,
                     format: format,
                     renderer: xtype ? undefined : renderer
-                });
+            },this.colConfig[name]||{});
+            if (this.ignoreFields.indexOf(name) === -1) {
+               
+                columns.push(col);
             }
         }, this);
         return columns;

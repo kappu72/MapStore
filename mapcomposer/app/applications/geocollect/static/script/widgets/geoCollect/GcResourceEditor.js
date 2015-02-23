@@ -152,7 +152,7 @@ this.items=[{
                                         msg:this.jsonP.canCommit()? this.validateMsgValid:this.validateMsgInvalid,
                                         animEl: 'elId',
                                         icon: Ext.MessageBox.INFO
-                                        });
+});
                                                                 
                                 },scope:this}, ]},'-',
 			 				
