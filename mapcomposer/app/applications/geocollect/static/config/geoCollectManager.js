@@ -150,6 +150,13 @@
         "qrCodeSize":128,
         "appDownloadUrl":"http://demo.geo-solutions.it/share/mapstoremobile/MapStoreMobile.apk"
 
-	}
+	},
+    "availableMapButtons":[
+        "editinfo",
+        "deletemap",
+        "viewmap",
+        "embedmap",
+        "clonemap"
+    ]
 	
 }
