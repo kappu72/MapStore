@@ -484,6 +484,44 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
      */ 
     extraAttributes: "templateId",
 
+    /** Keys of the availableMapButtons array */
+    editMapInfoKey : "editinfo",
+    deleteMapKey : "deletemap",
+    editMapKey : "editmap",
+    viewMapKey : "viewmap",
+    embedMapKey : "embedmap",
+    cloneMapKey : "clonemap",
+    
+    /**
+     * Property: availableMapButtons
+     * {Array<String>} List of all the available buttons in the map list rows
+     * This defines only the available buttons, not their visibility: if a button 
+     * is not available to an user, the grid will hide it
+     * For example, the "Edit Map" button is hidden for unauthorized users, but "editmap" should be
+     * present in this array to enable authorized users to see it.
+     * NOTE: If no config is found, the default will be built using the MapKeys values.
+     * 
+     * This configuration is the default one:
+     *
+     * "availableMapButtons":[
+     *   "editinfo",
+     *   "deletemap",
+     *   "editmap",
+     *   "viewmap",
+     *   "embedmap",
+     *   "clonemap"
+     * ]
+     * 
+     */
+    availableMapButtons:[
+        "editinfo",
+        "deletemap",
+        "editmap",
+        "viewmap",
+        "embedmap",
+        "clonemap"
+    ],
+    
     /**
     * Constructor: initComponent 
     * Initializes the component
@@ -527,6 +565,21 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
         this.geoSearchUsersUrl = geoStoreBase + 'extjs/search/users';
         this.geoSearchCategoriesUrl = geoStoreBase + 'extjs/search/category';
 		
+        // Setup the available buttons in the map row
+        if(config.hasOwnProperty("availableMapButtons")){
+            this.availableMapButtons = config.availableMapButtons;            
+        }else{
+            // Build the default array
+            this.availableMapButtons = [
+                editMapInfoKey,
+                deleteMapKey,
+                editMapKey,
+                viewMapKey,
+                embedMapKey,
+                cloneMapKey
+            ];
+        }
+        
 		// //////////////////////////////////////////////////////////
         // An object that contains the string to search the resource
 		// //////////////////////////////////////////////////////////
@@ -1952,7 +2005,8 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
 		// In IE7 we need to set button property "padding" and 
 		// table width otherwise buttons are stretched			
 		// /////////////////////////////////////////////////////
-        tpl +=  '<td >'+
+        if(config.availableMapButtons.indexOf(this.editMapInfoKey) > -1 ){
+            tpl +=  '<td >'+
                         '<tpl if="canEdit==true">'+
                             '<table class="x-btn x-btn-text-icon" style="width:30px" cellspacing="0"  >' +
                             '<tbody class="x-btn-small x-btn-icon-small-left" id=\'{[this.getButtonERId(values,\'_editMetadataBtn\')]}\'>' +
@@ -1989,8 +2043,10 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
                             '</tbody>' +
                             '</table>' +
                         '</tpl>'+
-                    '</td>'+
-                    '<td >'+
+                    '</td>';
+        }
+		if(config.availableMapButtons.indexOf(this.deleteMapKey) > -1 ){
+            tpl +=  '<td >'+
                         '<tpl if="canDelete==true">'+
                             '<table class="x-btn x-btn-text-icon"  style="width:30px" cellspacing="0"  >' +
                             '<tbody class="x-btn-small x-btn-icon-small-left" id=\'{[this.getButtonDMId(values,\'_deleteBtn\')]}\'>' +
@@ -2027,8 +2083,10 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
                             '</tbody>' +
                             '</table>' +
                         '</tpl>'+
-                    '</td>'+
-                    '<td >'+
+                    '</td>';
+		}
+		if(config.availableMapButtons.indexOf(this.editMapKey) > -1 ){
+            tpl +=  '<td >'+
                         '<tpl if="canEdit==true">'+
                             '<table class="x-btn x-btn-text-icon" style="width:30px" cellspacing="0"  >' +
                             '<tbody class="x-btn-small x-btn-icon-small-left" id=\'{[this.getButtonVMId(values,\'_editBtn\',\'&auth=true\')]}\'>' +
@@ -2065,8 +2123,10 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
                             '</tbody>' +
                             '</table>' +
                         '</tpl>'+
-                    '</td>'+
-                    '<td >'+
+                    '</td>';
+		}
+		if(config.availableMapButtons.indexOf(this.viewMapKey) > -1 ){
+            tpl +=  '<td >'+
                         '<table class="x-btn x-btn-text-icon" style="width:30px" cellspacing="0" >'+
                         '<tbody class="x-btn-small x-btn-icon-small-left" id=\'{[this.getButtonVMId(values,\'_viewBtn\',\'&auth=false\')]}\'>'+
                         '<tr >'+
@@ -2102,9 +2162,10 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
                         '</tr>' +
                         '</tbody>' +
                         '</table>' +
-                    '</td>'
-					+
-                    '<td >'+
+                    '</td>';
+		}
+		if(config.availableMapButtons.indexOf(this.embedMapKey) > -1 ){
+            tpl +=  '<td >'+
                         '<table class="x-btn x-btn-text-icon" style="width:30px" cellspacing="0" >'+
                         '<tbody class="x-btn-small x-btn-icon-small-left" id=\'{[this.getButtonEMId(values,\'_embedBtn\')]}\'>'+
                         '<tr >'+
@@ -2141,8 +2202,9 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
                         '</tbody>' +
                         '</table>' +
                     '</td>';
-
-				tpl += '<td >'+
+        }
+		if(config.availableMapButtons.indexOf(this.cloneMapKey) > -1 ){
+            tpl += '<td >'+
 						 '<tpl if="this.isNotGuest()">'+
 	                        '<table class="x-btn x-btn-text-icon" style="width:30px" cellspacing="0" >'+
 	                        '<tbody class="x-btn-small x-btn-icon-small-left" id=\'{[this.getCloneButton(values)]}\'>'+
@@ -2181,7 +2243,7 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
 	                        '</table>' +
 						  '</tpl>'+
 	                    '</td>';
-	                    
+        }
               tpl +=  '</tr>'+
             '</table>'+
         '</div>';
