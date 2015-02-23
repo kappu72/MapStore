@@ -557,10 +557,12 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
                     //Se sono in editing il sel model è bloccato :-S    
                  
                     },
-                    "rowselect": function() {
+                    "rowselect": function(r) {
                        //Abilito i bottoni!
                        this.enableTools();
- 
+                     featureManager.showLayer(
+                        featureManager.layer.id, "selected"
+                    );
                     },
                     "rowdeselect": function() {
                        //Abilito i bottoni!
@@ -622,7 +624,7 @@ gxp.plugins.GcSegGrid = Ext.extend(gxp.plugins.ClickableFeatures, {
 									var charCode = e.getCharCode();
 									if(charCode == 13){
 										var value = field.getValue();
-										featureManager.setPage({index: value - 1})
+										featureManager.setPage({index: value - 1});
 									}
 								}
 							}
