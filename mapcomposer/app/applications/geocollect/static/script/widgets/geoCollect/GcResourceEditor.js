@@ -44,6 +44,9 @@ mxp.widgets.GcResourceEditor = Ext.extend(Ext.Panel, {
     guiToJSONBtnTooltip:'Get Configuration  From User Interface',
     checkMissionBtn:"Validate",
     checkMissionBtnTooltip:"Validate Configuration",
+    validateMsgValid:"Mission Template Valid",
+    validateMsgInvalid:"Mission Template Invalid",
+    validateMsgTitle:"Is Valid?",
 	layout:'accordion',
 	border:false,
 	resource:null, // la risorsa caricata
@@ -143,7 +146,13 @@ this.items=[{
                                 tooltip: this.checkMissionBtnTooltip,
                                 iconCls: "accept",
                                 handler: function(btn){ 
-                                    Ext.Msg.alert('Status', 'Page valid:'+this.canCommit()); 
+                                    
+                                    Ext.Msg.show({
+                                        title:this.validateMsgTitle,
+                                        msg:this.jsonP.canCommit()? this.validateMsgValid:this.validateMsgInvalid,
+                                        animEl: 'elId',
+                                        icon: Ext.MessageBox.INFO
+                                        });
                                                                 
                                 },scope:this}, ]},'-',
 			 				
@@ -188,13 +197,18 @@ this.items=[{
 					f.setValues({blob:resource});
                 },
                 canCommit :function(){
-                    var f = this.getForm();
-                    return f.isValid();
+                    var f = this.getForm().getValues().blob;
+                    if (f.length<1)return false;
+                    try{
+                    var res= Ext.util.JSON.decode(f);}
+                    catch (e){
+                        return false;    
+                    }
+                    return true;
                 }
             })
 
 ];	
-
 mxp.widgets.GcResourceEditor.superclass.initComponent.call(this, arguments);	
 },
 //Ritorna json completo da salvare montando i vari pezzi

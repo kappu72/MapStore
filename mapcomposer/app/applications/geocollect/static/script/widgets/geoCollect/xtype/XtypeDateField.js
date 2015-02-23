@@ -30,7 +30,8 @@ mxp.widgets.XtypeDateField = Ext.extend(Ext.FormPanel,{
 
     /** api: xtype = mxp_gc_xtype_textfield */
 	xtype:'mxp_gc_xtype_datefield',
-	
+	idFieldLabel:"Field",
+    labFieldLabel:"Label",
 	//Utilizzat per ripulire i campi valori
    clV:new RegExp("^(\\${origin.)(.*)(})$"),
    jObj:null,
@@ -39,14 +40,14 @@ initComponent: function() {
 
 this.items=[{
    				xtype:'textfield', 
-				fieldLabel:'Field ',
+				fieldLabel:this.idFieldLabel,
 				ref:'idField',
 				disabled:true,
 				allowBlank:false
 			},
 			{
    				xtype:'textfield', 
-				fieldLabel:'Label',
+				fieldLabel:this.labFieldLabel,
 				ref:'labField',
 				allowBlank:false,
 		    },

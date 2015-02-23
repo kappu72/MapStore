@@ -48,7 +48,17 @@ mxp.widgets.XtypeMap = Ext.extend(Ext.FormPanel,{
 
     /** api: xtype = mxp_gc_xtype_mapViewPoint */
 	xtype:'mxp_gc_xtype_mapViewPoint',
-	
+	descrFieldLabel:"Description",
+	editableFieldLabel:"Ediatable",
+	panFieldLabel:"Allow Pan",
+	zoomFieldLabel:"Allow Zoom",
+	displayFieldLabel:"Dispaly Value",
+	centerFieldLabel:"Center",
+	centerMsgLabel:"Message",
+	localizeFieldLabel:"Localize",
+	localizeMsgLabel:"Message",
+	zoomLevelLabel:"Zoom Level",
+	mapHeightLabel:"Map heigth",
 	//Utilizzat per ripulire i campi valori
    clV:new RegExp("^(\\${origin.)(.*)(})$"),
    jObj:null,
@@ -56,29 +66,29 @@ initComponent: function() {
 
 this.items=[ {
    				xtype:'textfield', 
-				fieldLabel:'Description',
+				fieldLabel:this.descrFieldLabel,
 				ref:'descriptionField',
 				allowBlank:true
 				
 		     },{
    				xtype:'checkbox', 
-				fieldLabel:'Editable',
+				fieldLabel:this.editableFieldLabel,
 				ref:'editCk'
 				
 		    }
 		    ,{
    				xtype:'checkbox', 
-				fieldLabel:'Allow Pan',
+				fieldLabel:this.panFieldLabel,
 				ref:'panCk'
 				
 		    }
 		    ,{
    				xtype:'checkbox', 
-				fieldLabel:'Allow Zoom',
+				fieldLabel:this.zoomFieldLabel,
 				ref:'zoomCk'
 			},{
    				xtype:'checkbox', 
-				fieldLabel:'Display Value',
+				fieldLabel:this.displayFieldLabel,
 				ref:'origValCk'
 				
 		    },{
@@ -86,7 +96,7 @@ this.items=[ {
            
            	items:[{
    				xtype:'checkbox',
-				 fieldLabel: 'Center',
+				fieldLabel: this.centerFieldLabel,
 				ref:'/centerCk',
 				listeners:{
 					check:function( o, checked ){
@@ -97,7 +107,7 @@ this.items=[ {
 				
 		    },{
 		    	xtype:'label',
-		    	text:'Message',
+		    	text:this.centerMsgLabel,
 		    	style:{
 		    		paddingTop:'3px'
 		    	}
@@ -113,7 +123,7 @@ this.items=[ {
            
            	items:[{
    				xtype:'checkbox', 
-				fieldLabel:'Localize',
+				fieldLabel:this.localizeFieldLabel,
 				ref:'/localizeCk',
 				listeners:{
 					check:function( o, checked ){
@@ -125,7 +135,7 @@ this.items=[ {
 		    }
 		    ,{
 		    	xtype:'label',
-		    	text:'Message',
+		    	text:this.localizeMsgLabel,
 		    	style:{
 		    		paddingTop:'3px'
 		    	}
@@ -138,7 +148,7 @@ this.items=[ {
 		    }
 		    ]},{
             	xtype: 'spinnerfield',
-            	fieldLabel: 'Zoom level',
+            	fieldLabel: this.zoomLevelLabel,
             	name: 'Map Height',
             	ref:'zoomLev',
             	minValue: 1,
@@ -147,7 +157,7 @@ this.items=[ {
            }
 		    ,{
             	xtype: 'spinnerfield',
-            	fieldLabel: 'Map Height',
+            	fieldLabel: this.mapHeightLabel,
             	name: 'Map Height',
             	ref:'heigthFild',
             	minValue: 300,

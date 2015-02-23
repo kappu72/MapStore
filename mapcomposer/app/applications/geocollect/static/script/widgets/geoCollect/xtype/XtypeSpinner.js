@@ -31,7 +31,9 @@ mxp.widgets.XtypeSpinner= Ext.extend(Ext.FormPanel,{
 
     /** api: xtype = mxp_gc_xtype_spinner */
 	xtype:'mxp_gc_xtype_spinner',
-	trackResetOnLoad :true,
+	idFieldLabel:"Field",
+    labFieldLabel:"Label",
+    optFieldLabel:"Options",
 	//Utilizzat per ripulire i campi valori
    clV:new RegExp("^(\\${origin.)(.*)(})$"),
 
@@ -41,19 +43,19 @@ initComponent: function() {
 
 this.items=[{
    				xtype:'textfield', 
-				fieldLabel:'Field ',
+				fieldLabel:this.idFieldLabel,
 				ref:'idField',
 				disabled:true,
 				allowBlank:false
 			},
 			{
    				xtype:'textfield', 
-				fieldLabel:'Label',
+				fieldLabel:this.labFieldLabel,
 				ref:'labField',
 				allowBlank:false,
 		    },{
    				xtype:'mxp_gc_options', 
-				fieldLabel:'Options',
+				fieldLabel:this.optFieldLabel,
 				ref:'optField'
 			}
 		     ];

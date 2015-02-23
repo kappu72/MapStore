@@ -28,7 +28,8 @@ mxp.widgets.XtypeSepIc = Ext.extend(Ext.FormPanel,{
 
     /** api: xtype = mxp_gc_xtype_separatorWithIcon */
 	xtype:'mxp_gc_xtype_separatorWithIcon',
-	
+	  labFieldLabel:"Label",
+    valueFieldLabel:"Value of PriorityField",
 	//Utilizzat per ripulire i campi valori
    clV:new RegExp("^(\\${origin.)(.*)(})$"),
    jObj:null,
@@ -37,14 +38,14 @@ initComponent: function() {
 
 this.items=[ {	//contiene il valore del priority field 
    				xtype:'textfield', 
-				fieldLabel:'Value of PriorityField',
+				fieldLabel:this.valueFieldLabel,
 				ref:'valueField',
 				disabled:true,
 				allowBlank:false,
 				
 		     },{
    				xtype:'textfield', 
-				fieldLabel:'Label',
+				fieldLabel:this.labFieldLabel,
 				ref:'labField',
 				allowBlank:false,
 		    }

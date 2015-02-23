@@ -28,7 +28,9 @@ mxp.widgets.XtypeLabel = Ext.extend(Ext.FormPanel,{
 
     /** api: xtype = mxp_gc_xtype_label */
 	xtype:'mxp_gc_xtype_label',
-	
+	idFieldLabel:"Field",
+    labFieldLabel:"Label",
+    valueFieldLabel:"Value",
 	//Utilizzat per ripulire i campi valori
    clV:new RegExp("^(\\${origin.)(.*)(})$"),
    jObj:null,
@@ -37,7 +39,7 @@ initComponent: function() {
 
 this.items=[{
    				xtype:'textfield', 
-				fieldLabel:'Field ',
+				fieldLabel:this.idFieldLabel,
 				ref:'idField',
 				name:'fieldId',
 				disabled:true,
@@ -46,7 +48,7 @@ this.items=[{
 },			
 {
    				xtype:'textfield', 
-				fieldLabel:'Value',
+				fieldLabel:this.valueFieldLabel,
 				ref:'valueField',
 				name:'value',
 				disabled:!this.isFielIdActive(),
@@ -54,7 +56,7 @@ this.items=[{
 				
 		     },{
    				xtype:'textfield', 
-				fieldLabel:'Label',
+				fieldLabel:this.labFieldLabel,
 				ref:'labField',
 				name:'label',
 				allowBlank:false,
