@@ -24,6 +24,17 @@
  * Upload the store (RESTful request to GeoStore) in the grid.
  * The grid contains the plugin RowExpander that allows the display of buttons used to view, edit and delete resources saved within Geostore.
  * 
+ * Example of QRCode Menu configuration
+ *
+ *  "embedLink": {
+ *      "embeddedTemplateName": "viewer",
+ *      "showDirectURL": true,
+ *      "showQRCode":true,
+ *      "qrCodeSize":128,
+ *      "showMapStoreMobileSource":true,
+ *      "appDownloadUrl":"http://build.geo-solutions.it/mapstoremobile/downloads/releases/1.0.0/developement/GeoCollect.apk"
+ *  },
+ *
  * Inherits from:
  *  - <Ext.grid.GridPanel>
  *
@@ -612,15 +623,8 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
         var showQR = (this.config.embedLink.showQRCode ==true && !Ext.isIE7 && !Ext.isIE8 && !Ext.isIE6);
         var size = config.embedLink.qrCodeSize;
         
-        this.QRCodeMenu=Ext.apply({config:config}, {
-        text: this.mobileText,
-        disabled: !showQR,
-        iconCls: 'ic_mobile',
-        menu: {
-            xtype: 'menu',
-            plain: true,
-            
-                items: [{
+        var qrcodeMenuItems = [
+                {
                     text: this.installApplicationText,
                     iconCls: 'ic_qrcode',
                     scope:this,
@@ -664,7 +668,14 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
                         });
                         win.show();
                     }
-                },{
+                }
+        ];
+        
+        // Shows the "Add this source to MapStoreMobile" menu
+        if(!config.embedLink.hasOwnProperty("showMapStoreMobileSource")
+            || config.embedLink.showMapStoreMobileSource == true){
+            
+            qrcodeMenuItems.push({
                     iconCls: 'ic_qrcode',
                     text: this.loadThisSourceText,
                     tooltip: 'Share This Source',
@@ -708,7 +719,17 @@ MSMGridPanel = Ext.extend(Ext.grid.GridPanel, {
                         });
                         win.show();
                     }
-                }]
+                });
+        }
+        
+        this.QRCodeMenu=Ext.apply({config:config}, {
+        text: this.mobileText,
+        disabled: !showQR,
+        iconCls: 'ic_mobile',
+        menu: {
+            xtype: 'menu',
+            plain: true,
+            items: qrcodeMenuItems
             }
         });
         // //////////////
