@@ -148,14 +148,14 @@
 		"showDirectURL": true,
         "showQRCode":true,
         "qrCodeSize":128,
-        "appDownloadUrl":"http://demo.geo-solutions.it/share/mapstoremobile/MapStoreMobile.apk"
+        "showMapStoreMobileSource":false,
+        "appDownloadUrl":"http://build.geo-solutions.it/mapstoremobile/downloads/releases/1.0.0/developement/GeoCollect.apk"
 
 	},
     "availableMapButtons":[
         "editinfo",
         "deletemap",
         "viewmap",
-        "embedmap",
         "clonemap"
     ]
 	
