@@ -159,11 +159,12 @@ gxp.plugins.WMSSource = Ext.extend(gxp.plugins.LayerSource, {
         if (this.version) {
             baseParams.VERSION = this.version;
         }
-        
-	    // /////////////////////////////////////////////////////
+        console.log(this.target);
+         // /////////////////////////////////////////////////////
 	    // Get the user's corrensponding authkey if present 
 	    // (see MSMLogin.getLoginInformation for more details)
 	    // /////////////////////////////////////////////////////
+	    if(!this.target.userDetails && sessionStorage.userDetails)this.target.userDetails= Ext.decode(sessionStorage.userDetails);
 		if(this.authParam && this.target.userDetails){
 			var userInfo = this.target.userDetails;
 			var authkey;

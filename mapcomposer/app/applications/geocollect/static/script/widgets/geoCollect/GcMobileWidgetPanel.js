@@ -795,6 +795,9 @@ mxp.widgets.GcMobileWidgetPanel = Ext.extend(Ext.Panel, {
             this.actions_store.push(this.actionPhoto(obj));
         }//ho action send
         else if (obj.xtype === 'actionsend') {
+             if(!r.get('_created')){
+                 this.actions_store[this.action_store.findAction('actionsend')]=this.actionSend(obj);
+             }
             this.actions_store.push(this.actionSend(obj));
         } else if (obj.xtype === 'mapViewPoint') {
             if (obj.localize)
