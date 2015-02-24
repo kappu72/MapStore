@@ -231,7 +231,8 @@
            "selectOnMap": false,
            "alwaysDisplayOnMap":false,
            "colConfig":{
-                            "status":{"header": "STATUS"}
+                            "status":{
+                            "header": "STATUS"}
                 },
            "configHistory":{
                     "queriableAttribute" : "GCID" ,

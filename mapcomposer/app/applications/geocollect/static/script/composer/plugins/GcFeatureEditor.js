@@ -358,8 +358,8 @@ gxp.plugins.GcFeatureEditor = Ext.extend(gxp.plugins.ClickableFeatures, {
                                 gcseg.segEditing=false;
                                 gcseg.segGrid.getSelectionModel().unlock();
                                 this.target.mapPanelContainer.getTopToolbar().enable();
-                                var r = gcseg.segGrid.getSelectionModel().getSelected();//
-                                if(r)this.selectControl.select(r.data.feature);
+                               // var r = gcseg.segGrid.getSelectionModel().getSelected();//
+                              //  if(r)this.selectControl.select(r.data.feature);
                                 this.actions[0].items[0].enable();
                                 this.actions[1].items[0].enable();
                                 //TODO CONTROLLA SE HO TIGA SELEZIONATA E RISELEZIONA LA FEATURE!!
