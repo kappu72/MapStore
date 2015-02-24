@@ -599,7 +599,6 @@ mxp.widgets.GcMobileWidgetPanel = Ext.extend(Ext.Panel, {
             this.page.attributes = {//Se ho messaggio lo metto nella pagina
                 message : this.pageMsg.getValue()
             };
-            console.log(this.actions_store);
         if (this.actions_store.length > 0) {//attacco azioni della pagina generando id
             this.page.actions = [];
             for ( i = 0; i < this.actions_store.length; i++) {
