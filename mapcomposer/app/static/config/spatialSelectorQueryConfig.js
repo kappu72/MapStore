@@ -1,10 +1,10 @@
 {
    "scaleOverlayMode": "basic",
    "gsSources":{ 
-   		"default": {
+   		"gs": {
 			"ptype": "gxp_wmssource",
 			"title": "Default GeoServer",
-			"url": "http://localhost:8080/geoserver/ows",
+			"url": "http://demo1.geo-solutions.it/geoserver-enterprise/ows",
 			"SRS": "EPSG:900913",
 			"version":"1.1.1"
 		},
@@ -97,15 +97,27 @@
 	          "collapsed": false,
 	          "collapsible": true,
 	          "header": true
-	      },{
+	      },
+	       {
 	          "xtype": "panel",
 	          "title": "Query Panel",         
 	          "border": false,
-	          "id": "east",
+	           "layout":"accordion",
+	           
+	          "items":[
+	          {
+	              "xtype": "panel",
+                    "title": "Panel"
+                     },
+               {
+                  "xtype": "panel",
+                    "title": "Query Panel",
+                     "id": "east" }
+                    ],
 	          "width": 400,
 	          "height": 500,
 	          "region": "east",
-	          "layout": "fit",
+	          
 	          "collapsed": false,
 	          "collapsible": true,
 	          "header": true
@@ -118,14 +130,6 @@
         "topOutUnits":"km"
     },
 	"customTools":[{
-           "ptype": "gxp_wpsmanager",
-           "id": "wpsManager",
-           "url": "http://localhost:8080/geoserver/wps",
-           "geostoreUrl": "http://localhost:8080/geostore/rest",
-           "geostoreUser": "admin",
-           "geostorePassword": "admin",
-           "geostoreProxy": "/http_proxy/proxy?url="
-        },{
 			"ptype": "gxp_embedmapdialog",
 			"actionTarget": {"target": "paneltbar", "index": 2},
 			"embeddedTemplateName": "viewer",
@@ -158,7 +162,13 @@
 			"fileDocURL": "MapStore-Help.pdf"
 		}, {
 		  "ptype": "gxp_featuremanager",
-		  "id": "featuremanager"
+		  "id": "featuremanager",
+		   "autoLoadFeatures":true,
+          "autoSetLayer":false,
+		  "layer":{
+		       "source":"gs",
+             "name":"geosolutions:cities"
+		  }
 	    }, {
 		  "ptype": "gxp_featuregrid",
 		  "featureManager": "featuremanager",
