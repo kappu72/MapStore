@@ -89,7 +89,7 @@ var GeoExplorerLoader = Ext.extend(Ext.util.Observable, {
             this.loadTemplateConfig();
         });
 
-        this.loadData(customConfigName ? "config/" + customConfigName + ".js"  : "config/bolzanoQueryConfig.js", null, "loaddefaultconfig");      
+        this.loadData(customConfigName ? "config/" + customConfigName + ".js"  : "config/bolzanoVigili.js", null, "loaddefaultconfig");      
     },
 
     /** private: method[loadTemplateConfig]

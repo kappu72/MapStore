@@ -328,10 +328,11 @@ gxp.plugins.GeoStoreLogin = Ext.extend(gxp.plugins.Tool, {
             }           
         },this);
         
-        this.loginAction.disable();
+        this.loginAction.hide();
+        
         this.logoutAction.show();
         this.logoutAction.enable();
-        this.target.setIconClass("logout");
+   //     this.target.setIconClass("logout");
         this.logged=true;
         this.win.close();
     },

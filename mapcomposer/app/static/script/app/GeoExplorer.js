@@ -490,10 +490,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                     border: false, 
 					id: 'legend', 
 					title: this.legendText
-                }, {
-                    xtype: "panel", layout: "accordion", 
-                    border: false, id: 'searchpanel', title: this.searchText
-			    }
+                }
             ]
         });
         
